@@ -1,8 +1,7 @@
-import dynamic from "next/dynamic";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { Toaster } from "react-hot-toast";
-
-// const Sidebar = dynamic(() => import("./Sidebar"), { suspense: true });
+import ConnectModal from "../Modals/connect";
+import Header from "./Header";
 
 const toastOptions = {
   style: {
@@ -29,9 +28,10 @@ const toastOptions = {
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const [connectModal, setConnectModal] = useState<boolean>(false);
   return (
     <>
-      <div className="min-h-screen bg-[#53a8e8]">
+      <div className="font-mono">
         <Toaster position="top-right" toastOptions={toastOptions} />
         <Suspense
           fallback={
@@ -40,7 +40,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
           }
         >
-          <div className="">{children}</div>
+          <Header setConnectModal={setConnectModal} />
+          {connectModal ? (
+            <ConnectModal setConnectModal={setConnectModal} />
+          ) : null}
+
+          <div className="flex-1">{children}</div>
         </Suspense>
       </div>
     </>
