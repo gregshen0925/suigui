@@ -4,9 +4,7 @@ import React, {
   type Dispatch,
   type SetStateAction,
 } from "react";
-import { motion } from "framer-motion";
 import useOnClickOutside from "../../hooks/useOnClickOutside";
-import Image from "next/image";
 import LoginCard from "../LoginCard";
 
 type Props = {
@@ -14,10 +12,6 @@ type Props = {
 };
 
 const ConnectModal = ({ setConnectModal }: Props) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [change, setChange] = useState<boolean>(false);
-  const [copied, setCopied] = useState<boolean>(false);
-
   const clickOutsideRef = useRef<HTMLDivElement>(null);
   const clickOutsidehandler = () => {
     setConnectModal(false);

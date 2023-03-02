@@ -25,6 +25,7 @@ const LoginCard = ({ setConnectModal }: Props) => {
     "kkk",
     "lll",
   ];
+
   return (
     <>
       <Tilt
@@ -37,7 +38,7 @@ const LoginCard = ({ setConnectModal }: Props) => {
         <div className="h-[480px] w-[500px] rounded-2xl bg-white/20 font-mono sm:h-[530px] sm:w-[600px]">
           <button
             onClick={() => setConnectModal(false)}
-            className="absolute top-3 right-2.5 ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm text-gray-400 hover:text-black"
+            className="absolute top-3 right-2.5 ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm text-gray-700 hover:text-black"
           >
             <svg
               aria-hidden="true"
