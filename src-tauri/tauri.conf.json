@@ -1,9 +1,9 @@
 {
   "build": {
-    "beforeBuildCommand": "npm run build",
-    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "rm -rf src-tauri/target/ && yarn build",
+    "beforeDevCommand": "yarn dev",
     "devPath": "http://localhost:3000",
-    "distDir": "../pages",
+    "distDir": "../out",
     "withGlobalTauri": true
   },
   "package": {
@@ -29,7 +29,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "my.suigui",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -58,7 +58,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "Sui Gui",
+        "title": "Sui GUI",
         "width": 800
       }
     ]
