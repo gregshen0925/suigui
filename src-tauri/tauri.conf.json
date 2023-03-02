@@ -29,11 +29,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-<<<<<<< HEAD
       "identifier": "my.suigui",
-=======
-      "identifier": "suigui",
->>>>>>> 9eb9ca0 (fix)
       "longDescription": "",
       "macOS": {
         "entitlements": null,
