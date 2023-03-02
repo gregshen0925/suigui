@@ -38,7 +38,7 @@ const Header = ({ setConnectModal }: Props) => {
             </div> */}
             <div
               style={{ color: "white" }}
-              className="text-3xl font-bold tracking-widest"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-widest"
             >
               Sui GUI
             </div>
@@ -54,7 +54,7 @@ const Header = ({ setConnectModal }: Props) => {
               Docs
             </Link>
           </li> */}
-          <li className="p-4">
+          <li className="">
             <motion.button
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.05 }}
@@ -83,7 +83,7 @@ const Header = ({ setConnectModal }: Props) => {
           }
         >
           <ul>
-            <li
+            {/* <li
               onClick={handleNav}
               className="p-4 text-2xl hover:text-gray-500"
             >
@@ -93,7 +93,7 @@ const Header = ({ setConnectModal }: Props) => {
               >
                 Docs
               </Link>
-            </li>
+            </li> */}
             <li
               onClick={handleModal}
               className="p-4 text-2xl hover:text-gray-500"

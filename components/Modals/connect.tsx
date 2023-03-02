@@ -26,9 +26,9 @@ const ConnectModal = ({ setConnectModal }: Props) => {
 
   return (
     <div className="fixed inset-0 z-50 flex w-full items-center justify-center overflow-y-auto overflow-x-hidden bg-opacity-80 pt-40 backdrop-blur-sm sm:h-full sm:pt-0">
-      <div ref={clickOutsideRef} className="">
-        <LoginCard setConnectModal={setConnectModal} />
-      </div>
+      {/* <div ref={clickOutsideRef} className=""> */}
+      <LoginCard setConnectModal={setConnectModal} />
+      {/* </div> */}
     </div>
   );
 };
