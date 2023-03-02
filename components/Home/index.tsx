@@ -27,7 +27,7 @@ const Home: NextPage = () => {
   };
 
   return (
-    <div className="custom-img2 z-[-2] flex min-h-screen bg-cover bg-fixed bg-center items-center justify-center">
+    <div className="custom-img2 z-[-2] flex min-h-screen bg-cover bg-fixed items-center justify-center">
       <div className="absolute z-[-1] top-0 bottom-0 left-0 right-0 h-screen bg-black/10" />
 
       <div className="w-[300px]">
@@ -36,7 +36,6 @@ const Home: NextPage = () => {
             className="block w-full p-4 text-sm text-white border border-gray-300 rounded-lg bg-white/20 outline-none placeholder:text-gray-200"
             placeholder="Name"
             onChange={handleChange}
-            required={true}
           />
           <motion.button
             type="submit"
