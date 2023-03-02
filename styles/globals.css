@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.custom-img {
+  background-image: url("../public/water-background.jpeg");
+}
+
+.custom-img2 {
+  background-image: url("../public/water-bg-2.jpeg");
+}
