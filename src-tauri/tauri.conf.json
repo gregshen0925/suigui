@@ -7,7 +7,7 @@
     "withGlobalTauri": true
   },
   "package": {
-    "productName": "suigui",
+    "productName": "Sui GUI",
     "version": "0.1.0"
   },
   "tauri": {

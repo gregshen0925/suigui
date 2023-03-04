@@ -28,7 +28,7 @@ const Header = ({ setConnectModal }: Props) => {
   return (
     <div
       style={{ backgroundColor: "transparent" }}
-      className="fixed top-0 z-10 w-full pt-2 duration-300 ease-in"
+      className="w-full pt-2 duration-300 ease-in"
     >
       <div className="flex items-center justify-between text-white m-auto my-2 w-11/12 pt-2 md:pt-4">
         <Link href="/">

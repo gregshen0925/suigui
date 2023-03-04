@@ -2,6 +2,7 @@ import { Suspense, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import ConnectModal from "../Modals/connect";
 import Header from "./Header";
+import Sidebar from "./Sidebar";
 
 const toastOptions = {
   style: {
@@ -31,23 +32,29 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [connectModal, setConnectModal] = useState<boolean>(false);
   return (
     <>
-      <div className="font-mono">
-        <Toaster position="top-right" toastOptions={toastOptions} />
-        <Suspense
-          fallback={
-            <div className="custom-img2 flex h-screen w-full items-center justify-center">
-              Loading...
+      <Toaster position="top-right" toastOptions={toastOptions} />
+      <Suspense
+        fallback={
+          <div className="custom-img2 flex h-screen w-full items-center justify-center">
+            Loading...
+          </div>
+        }
+      >
+        <div className="">
+          <div className="custom-img2 z-[-2] h-screen bg-cover bg-fixed">
+            <div className="max-h-screen">
+              <Header setConnectModal={setConnectModal} />
+              {connectModal ? (
+                <ConnectModal setConnectModal={setConnectModal} />
+              ) : null}
+              <div className="my-10 max-w-xs overflow-y-hidden md:min-w-[25rem] h-full">
+                <Sidebar />
+              </div>
+              <div className="font-mono">{children}</div>
             </div>
-          }
-        >
-          <Header setConnectModal={setConnectModal} />
-          {connectModal ? (
-            <ConnectModal setConnectModal={setConnectModal} />
-          ) : null}
-
-          <div className="flex-1">{children}</div>
-        </Suspense>
-      </div>
+          </div>
+        </div>
+      </Suspense>
     </>
   );
 }
