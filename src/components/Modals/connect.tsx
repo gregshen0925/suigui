@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import React, {
   useRef,
   useState,
@@ -5,11 +6,14 @@ import React, {
   type SetStateAction,
 } from "react";
 import useOnClickOutside from "../../hooks/useOnClickOutside";
-import LoginCard from "../LoginCard";
 
 type Props = {
   setConnectModal: Dispatch<SetStateAction<boolean>>;
 };
+
+const LoginCard = dynamic(() => import("../LoginCard"), {
+  ssr: false,
+});
 
 const ConnectModal = ({ setConnectModal }: Props) => {
   const clickOutsideRef = useRef<HTMLDivElement>(null);

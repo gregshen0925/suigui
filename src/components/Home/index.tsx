@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 
 const Home: NextPage = () => {
   const [name, setName] = useState<string>("");

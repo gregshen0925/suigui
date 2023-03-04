@@ -3,6 +3,8 @@ import Image from "next/image";
 import React, { useState, type Dispatch, type SetStateAction } from "react";
 import Tilt from "react-parallax-tilt";
 import { motion } from "framer-motion";
+import { invoke } from "@tauri-apps/api";
+import { CreateKeyResult } from "../../bindings/CreateKeyResult";
 
 type Props = {
   setConnectModal: Dispatch<SetStateAction<boolean>>;
@@ -11,20 +13,14 @@ type Props = {
 const LoginCard = ({ setConnectModal }: Props) => {
   const [createNewAddress, setCreateNewAddress] = useState<boolean>(false);
   const isLogin = false;
-  const seedPhrase = [
-    "aaa",
-    "bbb",
-    "ccc",
-    "ddd",
-    "eee",
-    "fff",
-    "ggg",
-    "hhh",
-    "iii",
-    "jjj",
-    "kkk",
-    "lll",
-  ];
+  const [seedPhrase, setSeedPhrase] = useState<string[]>([]);
+
+  const handleCreateNewKey = async () => {
+    const { address, phrase, scheme } = await invoke("create_new_keypair") as CreateKeyResult;
+    console.log(address, phrase, scheme);
+    setSeedPhrase(phrase.split(' '));
+    setCreateNewAddress(true);
+  }
 
   return (
     <>
@@ -33,7 +29,7 @@ const LoginCard = ({ setConnectModal }: Props) => {
         tiltMaxAngleX={0}
         tiltMaxAngleY={10}
         glareBorderRadius={"15px"}
-        // glareColor={"#4b5e7d"}
+      // glareColor={"#4b5e7d"}
       >
         <div className="h-[480px] w-[500px] rounded-2xl bg-white/20 font-mono sm:h-[530px] sm:w-[600px]">
           <button
@@ -98,7 +94,7 @@ const LoginCard = ({ setConnectModal }: Props) => {
               <div className="flex flex-col items-center justify-center pt-10 space-y-5">
                 {" "}
                 <motion.button
-                  onClick={() => setCreateNewAddress(true)}
+                  onClick={handleCreateNewKey}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="w-[350px] h-[60px] bg-blue-600 text-white rounded-xl font-bold"

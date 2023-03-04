@@ -7,7 +7,7 @@ license = ""
 repository = ""
 default-run = "app"
 edition = "2021"
-rust-version = "1.59"
+rust-version = "1.67"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -15,15 +15,18 @@ rust-version = "1.59"
 tauri-build = { version = "1.2.1", features = [] }
 
 [dependencies]
-thiserror = "1"
-tokio = { version = "1.26.0", features = ["full"] }
+anyhow = "1"
+tokio = { version = "1", features = ["full"] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-serde_with_macros = "2.2"
-tauri = { version = "1.2.4", features = [] }
-surrealdb = {version = "1.0.0-beta.8", default-features=false, features = ['parallel', 'kv-rocksdb'] }
+serde_with_macros = "2"
+tauri = { version = "1", features = [] }
 parking_lot = "0.12"
 ts-rs = { version = "6" }
+sui-sdk = { git = "https://github.com/MystenLabs/sui", branch = "devnet"}
+sui-keys = { git = "https://github.com/MystenLabs/sui", branch = "devnet"}
+typed-store-derive = { git = "https://github.com/MystenLabs/sui", branch = "devnet"}
+dirs = "4"
 
 [features]
 # by default Tauri runs in production mode
