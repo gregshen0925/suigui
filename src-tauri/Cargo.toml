@@ -15,9 +15,15 @@ rust-version = "1.59"
 tauri-build = { version = "1.2.1", features = [] }
 
 [dependencies]
+thiserror = "1"
+tokio = { version = "1.26.0", features = ["full"] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
+serde_with_macros = "2.2"
 tauri = { version = "1.2.4", features = [] }
+surrealdb = {version = "1.0.0-beta.8", default-features=false, features = ['parallel', 'kv-rocksdb'] }
+parking_lot = "0.12"
+ts-rs = { version = "6" }
 
 [features]
 # by default Tauri runs in production mode
