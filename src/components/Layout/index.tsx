@@ -2,7 +2,7 @@ import { Suspense, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import ConnectModal from "../Modals/connect";
 import Header from "./Header";
-import Sidebar from "./Sidebar";
+import Sidebar from "../../pages/assets/components/Sidebar";
 
 const toastOptions = {
   style: {
@@ -47,9 +47,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               {connectModal ? (
                 <ConnectModal setConnectModal={setConnectModal} />
               ) : null}
-              <div className="my-10 max-w-xs overflow-y-hidden md:min-w-[25rem] h-full">
+              {/* <div className="my-10 max-w-xs overflow-y-hidden md:min-w-[25rem] h-full">
                 <Sidebar />
-              </div>
+              </div> */}
               <div className="font-mono">{children}</div>
             </div>
           </div>

@@ -25,7 +25,7 @@ parking_lot = "0.12"
 ts-rs = { version = "6" }
 sui-sdk = { git = "https://github.com/MystenLabs/sui", branch = "devnet"}
 sui-keys = { git = "https://github.com/MystenLabs/sui", branch = "devnet"}
-typed-store-derive = { git = "https://github.com/MystenLabs/sui", branch = "devnet"}
+# typed-store-derive = { git = "https://github.com/MystenLabs/sui", branch = "devnet"}
 dirs = "4"
 
 [features]

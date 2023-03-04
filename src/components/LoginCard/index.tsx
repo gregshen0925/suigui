@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import Image from "next/image";
 import React, { useState, type Dispatch, type SetStateAction } from "react";
-import Tilt from "react-parallax-tilt";
 import { motion } from "framer-motion";
 import { invoke } from "@tauri-apps/api";
-import { CreateKeyResult } from "../../bindings/CreateKeyResult";
+import { useSui } from "../../hooks/useSui";
+import { type CreateKeyResult } from "../../bindings/CreateKeyResult";
 
 type Props = {
   setConnectModal: Dispatch<SetStateAction<boolean>>;
@@ -19,15 +19,14 @@ const LoginCard = ({ setConnectModal }: Props) => {
     const { address, phrase, scheme } = (await invoke(
       "create_new_keypair"
     )) as CreateKeyResult;
-    console.log(address, phrase, scheme);
     setSeedPhrase(phrase.split(" "));
     setCreateNewAddress(true);
   };
 
   return (
     <div>
-      <div className="h-[480px] w-[500px] rounded-2xl bg-black/30 font-mono sm:h-[530px] sm:w-[600px]">
-        <div className="flex items-end p-3">
+      <div className="h-[650px] w-[600px] rounded-2xl bg-black/30 font-mono sm:h-[650px] sm:w-[600px]">
+        <div className="flex items-end pt-3 pr-3">
           <button
             onClick={() => setConnectModal(false)}
             className="ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-lg text-white hover:text-black"
@@ -48,29 +47,28 @@ const LoginCard = ({ setConnectModal }: Props) => {
           </button>
         </div>
 
-        <div className="flex flex-col justify-center pt-5 sm:pt-10">
+        <div className="flex flex-col justify-center pt-5">
           {/* Title */}
           <div className="text-white text-2xl font-bold text-center">
             {createNewAddress ? "Your Seed Phrase" : "Login"}
           </div>
 
           {/* Body */}
+
           {createNewAddress ? (
-            <>
-              <div className="flex justify-center items-center pt-5 sm:pt-10">
+            <div className="">
+              <div className="flex justify-center items-center pt-5">
                 <div className="grid grid-cols-3 grid-rows-4">
                   {seedPhrase.map((word, index) => (
-                    <div className="px-2 py-2">
-                      <button
-                        key={index}
-                        className="w-[150px] h-[50px] text-white bg-blue-800/80 rounded-2xl cursor-default text-left"
-                      >
-                        <span className="pl-4">
-                          {index + 1}.{index < 10 ? " " : null}
-                          {word}
-                        </span>
-                      </button>
-                    </div>
+                    <button
+                      key={index}
+                      className="w-[150px] h-[30px] text-white bg-blue-800/80 rounded-2xl cursor-default text-left mx-2 my-2"
+                    >
+                      <span className="pl-4 text-xs">
+                        {index + 1}.{index < 10 ? " " : null}
+                        {word}
+                      </span>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -86,12 +84,12 @@ const LoginCard = ({ setConnectModal }: Props) => {
                   Next
                 </motion.button>
               </div>
-            </>
+            </div>
           ) : (
             <div className="flex flex-col items-center justify-center pt-10 space-y-5">
               {" "}
               <motion.button
-                onClick={() => setCreateNewAddress(true)}
+                onClick={handleCreateNewKey}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="w-[350px] h-[60px] bg-blue-600 text-white rounded-xl font-bold"
@@ -105,6 +103,10 @@ const LoginCard = ({ setConnectModal }: Props) => {
               >
                 Import Seed Phrase
               </motion.button>
+              <div className="text-center text-white pt-10">
+                You seed phrase will only be stored in your local storage and
+                will not be sent to any server.
+              </div>
             </div>
           )}
         </div>

@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { motion } from "framer-motion";
+import { useRouter } from "next/router";
 
 type Props = {
   setConnectModal: Dispatch<SetStateAction<boolean>>;
@@ -15,6 +16,11 @@ type Props = {
 
 const Header = ({ setConnectModal }: Props) => {
   const [nav, setNav] = useState<boolean>(false);
+  const router = useRouter();
+
+  const pathname = router.pathname.split("/")[1];
+
+  console.log(pathname);
 
   const handleNav = () => {
     setNav(!nav);
@@ -46,20 +52,36 @@ const Header = ({ setConnectModal }: Props) => {
         </Link>
         <ul
           style={{ color: "white" }}
-          className="hidden sm:flex sm:items-center"
+          className="hidden sm:flex sm:items-center font-bold space-x-8"
         >
-          {/* <li className="p-4 transition duration-300 ease-in-out hover:scale-110">
-            <Link
-            >
-              Docs
+          <li className="transition duration-300 ease-in-out hover:scale-110">
+            <Link href={"/ecosystem"}>
+              <button
+                className={`rounded-2xl ${
+                  pathname == "ecosystem" ? "bg-blue-600" : "bg-blue-700/30"
+                }  w-[130px] h-[50px]`}
+              >
+                Ecosystem
+              </button>
             </Link>
-          </li> */}
+          </li>
+          <li className="transition duration-300 ease-in-out hover:scale-110">
+            <Link href={"/assets"}>
+              <button
+                className={`rounded-2xl ${
+                  pathname == "assets" ? "bg-blue-600" : "bg-blue-700/30"
+                }  w-[130px] h-[50px]`}
+              >
+                Assets
+              </button>
+            </Link>
+          </li>
           <li className="">
             <motion.button
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.05 }}
               onClick={handleModal}
-              className="flex w-[130px] h-[60px] text-lg items-center justify-center rounded-2xl bg-gradient-to-r from-sky-600 to-blue-600 font-bold text-white hover:from-blue-500 hover:to-sky-500"
+              className="flex w-[130px] h-[50px] text-lg items-center justify-center rounded-2xl bg-gradient-to-r from-sky-600 to-blue-600 font-bold text-white hover:from-blue-500 hover:to-sky-500"
             >
               Connect
             </motion.button>
@@ -83,17 +105,18 @@ const Header = ({ setConnectModal }: Props) => {
           }
         >
           <ul>
-            {/* <li
+            <li
               onClick={handleNav}
               className="p-4 text-2xl hover:text-gray-500"
             >
-              <Link
-                href="https://app.archbee.com/public/PREVIEW-TD3kzaCjLc0JFqjwWlYw5"
-                target="_blank"
-              >
-                Docs
-              </Link>
-            </li> */}
+              <Link href="/ecosystem">Ecosystem</Link>
+            </li>
+            <li
+              onClick={handleNav}
+              className="p-4 text-2xl hover:text-gray-500"
+            >
+              <Link href="/assets">Assets</Link>
+            </li>
             <li
               onClick={handleModal}
               className="p-4 text-2xl hover:text-gray-500"

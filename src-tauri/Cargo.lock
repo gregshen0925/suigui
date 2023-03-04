@@ -237,7 +237,6 @@ dependencies = [
  "tauri-build",
  "tokio",
  "ts-rs",
- "typed-store-derive",
 ]
 
 [[package]]
