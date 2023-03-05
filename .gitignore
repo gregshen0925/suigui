@@ -37,4 +37,4 @@ next-env.d.ts
 
 # local storage
 suigui_config.yaml
-suigui.keystore
+.suigui.keystore
