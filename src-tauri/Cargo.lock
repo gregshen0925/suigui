@@ -232,6 +232,7 @@ dependencies = [
  "serde_json",
  "serde_with_macros 2.2.0",
  "sui",
+ "sui-json-rpc",
  "sui-keys",
  "sui-sdk",
  "tauri",
