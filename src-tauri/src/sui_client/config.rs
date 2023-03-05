@@ -2,7 +2,7 @@
 use crate::ipc::IpcResponse;
 use anyhow::anyhow;
 use serde::Serialize;
-use std::path::PathBuf;
+use std::{fs, path::PathBuf};
 use sui::config::{Config, SuiClientConfig, SuiEnv};
 use sui_keys::keystore::{AccountKeystore, FileBasedKeystore, Keystore};
 use sui_sdk::types::crypto::SignatureScheme;
@@ -16,17 +16,24 @@ pub struct CreateConfigResult {
     scheme: String,
 }
 
+pub const SUI_GUI_APP_NAME: &str = "Sui GUI";
 pub const SUI_CLIENT_CONFIG: &str = "suigui_config.yaml";
 pub const SUI_KEYSTORE_FILENAME: &str = "suigui.keystore";
 
 #[tauri::command]
 pub fn create_new_config() -> IpcResponse<CreateConfigResult> {
-    let config_path = PathBuf::from(SUI_CLIENT_CONFIG);
-    let keystore_path = PathBuf::from(SUI_KEYSTORE_FILENAME);
+    let config_dir = if let Some(d) = dirs::config_dir() {
+        d.join(SUI_GUI_APP_NAME)
+    } else {
+        return Err(anyhow!("Fail to obtain config directory")).into();
+    };
 
-    if config_path.exists() {
-        return Err(anyhow!("Config file already exists")).into();
-    }
+    let config_path = config_dir.join(SUI_CLIENT_CONFIG);
+    let keystore_path = config_dir.join(SUI_KEYSTORE_FILENAME);
+
+    if !config_dir.exists() && fs::create_dir_all(&config_dir).is_err() {
+        return Err(anyhow!("Fail to create config directory")).into();
+    };
 
     let keystore_path = if let Ok(k) = FileBasedKeystore::new(&keystore_path) {
         k

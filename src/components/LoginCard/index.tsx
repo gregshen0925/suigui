@@ -3,7 +3,7 @@ import Image from "next/image";
 import React, { useState, type Dispatch, type SetStateAction } from "react";
 import { motion } from "framer-motion";
 import { invoke } from "@tauri-apps/api";
-import { useSui } from "../../hooks/useSui";
+// import { useSui } from "../../hooks/useSui";
 import { type IpcResponse, type CreateConfigResult } from "../../bindings";
 import { toast } from "react-hot-toast";
 
@@ -16,7 +16,7 @@ const LoginCard = ({ setConnectModal }: Props) => {
   const isLogin = false;
   const [seedPhrase, setSeedPhrase] = useState<string[]>([]);
 
-  const handleCreateNewKey = async () => {
+  const handleCreateNewConfig = async () => {
     const { error, result } = await invoke("create_new_config") as IpcResponse<CreateConfigResult>;
     if (result) {
       const { address, phrase } = result;
@@ -94,7 +94,7 @@ const LoginCard = ({ setConnectModal }: Props) => {
             <div className="flex flex-col items-center justify-center pt-10 space-y-5">
               {" "}
               <motion.button
-                onClick={handleCreateNewKey}
+                onClick={handleCreateNewConfig}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="w-[350px] h-[60px] bg-blue-600 text-white rounded-xl font-bold"
