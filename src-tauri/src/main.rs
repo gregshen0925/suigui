@@ -10,13 +10,17 @@ fn greet(name: &str) -> String {
 
 mod ipc;
 mod sui_client;
-use crate::sui_client::create_new_config;
+use crate::sui_client::config::{create_new_config, get_active_address};
 use anyhow::Result;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, create_new_config])
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            create_new_config,
+            get_active_address
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 
