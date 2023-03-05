@@ -12,7 +12,7 @@ mod ipc;
 mod sui_client;
 use crate::sui_client::{
     config::{create_new_config, get_active_address},
-    object::get_remote_objects,
+    object::{get_remote_coins, get_remote_objects},
 };
 use anyhow::Result;
 
@@ -24,6 +24,7 @@ async fn main() -> Result<()> {
             create_new_config,
             get_active_address,
             get_remote_objects,
+            get_remote_coins,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
