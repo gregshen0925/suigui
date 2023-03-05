@@ -36,5 +36,5 @@ yarn-error.log*
 next-env.d.ts
 
 # local storage
-temp.db
-.suigui.keystore
+suigui_config.yaml
+suigui.keystore

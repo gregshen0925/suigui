@@ -4,7 +4,8 @@ import React, { useState, type Dispatch, type SetStateAction } from "react";
 import { motion } from "framer-motion";
 import { invoke } from "@tauri-apps/api";
 import { useSui } from "../../hooks/useSui";
-import { type CreateKeyResult } from "../../bindings/CreateKeyResult";
+import { type IpcResponse, type CreateConfigResult } from "../../bindings";
+import { toast } from "react-hot-toast";
 
 type Props = {
   setConnectModal: Dispatch<SetStateAction<boolean>>;
@@ -16,12 +17,16 @@ const LoginCard = ({ setConnectModal }: Props) => {
   const [seedPhrase, setSeedPhrase] = useState<string[]>([]);
 
   const handleCreateNewKey = async () => {
-    const { address, phrase, scheme } = (await invoke(
-      "create_new_keypair"
-    )) as CreateKeyResult;
-    setSeedPhrase(phrase.split(" "));
-    setCreateNewAddress(true);
-  };
+    const { error, result } = await invoke("create_new_config") as IpcResponse<CreateConfigResult>;
+    if (result) {
+      const { address, phrase } = result;
+      setSeedPhrase(phrase.split(' '));
+      setCreateNewAddress(true);
+    }
+    if (error) {
+      toast.error(error);
+    }
+  }
 
   return (
     <div>

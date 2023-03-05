@@ -231,6 +231,7 @@ dependencies = [
  "serde 1.0.152",
  "serde_json",
  "serde_with_macros 2.2.0",
+ "sui",
  "sui-keys",
  "sui-sdk",
  "tauri",
@@ -3032,12 +3033,12 @@ checksum = "54b2f3c51e4dd999930845da5d10a48775b8fe4ca9f4f9ec1f9161f334da5dfe"
 
 [[package]]
 name = "field-offset"
-version = "0.3.4"
+version = "0.3.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1e1c54951450cbd39f3dbcf1005ac413b49487dabf18a720ad2383eccfeffb92"
+checksum = "a3cf3a800ff6e860c863ca6d4b16fd999db8b752819c1606884047b73e468535"
 dependencies = [
- "memoffset 0.6.5",
- "rustc_version 0.3.3",
+ "memoffset 0.8.0",
+ "rustc_version 0.4.0",
 ]
 
 [[package]]
@@ -6981,9 +6982,9 @@ checksum = "478c572c3d73181ff3c2539045f6eb99e5491218eae919370993b890cdbdd98e"
 
 [[package]]
 name = "pest"
-version = "2.5.5"
+version = "2.5.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "028accff104c4e513bad663bbcd2ad7cfd5304144404c31ed0a77ac103d00660"
+checksum = "8cbd939b234e95d72bc393d51788aec68aeeb5d51e748ca08ff3aad58cb722f7"
 dependencies = [
  "thiserror",
  "ucd-trie",
@@ -6991,9 +6992,9 @@ dependencies = [
 
 [[package]]
 name = "pest_derive"
-version = "2.5.5"
+version = "2.5.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2ac3922aac69a40733080f53c1ce7f91dcf57e1a5f6c52f421fadec7fbdc4b69"
+checksum = "a81186863f3d0a27340815be8f2078dd8050b14cd71913db9fbda795e5f707d7"
 dependencies = [
  "pest",
  "pest_generator",
@@ -7001,9 +7002,9 @@ dependencies = [
 
 [[package]]
 name = "pest_generator"
-version = "2.5.5"
+version = "2.5.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d06646e185566b5961b4058dd107e0a7f56e77c3f484549fb119867773c0f202"
+checksum = "75a1ef20bf3193c15ac345acb32e26b3dc3223aff4d77ae4fc5359567683796b"
 dependencies = [
  "pest",
  "pest_meta",
@@ -7014,9 +7015,9 @@ dependencies = [
 
 [[package]]
 name = "pest_meta"
-version = "2.5.5"
+version = "2.5.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e6f60b2ba541577e2a0c307c8f39d1439108120eb7903adeb6497fa880c59616"
+checksum = "5e3b284b1f13a20dc5ebc90aff59a51b8d7137c221131b52a7260c08cbc1cc80"
 dependencies = [
  "once_cell",
  "pest",
@@ -9376,6 +9377,64 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "734676eb262c623cec13c3155096e08d1f8f29adce39ba17948b18dad1e54142"
 
 [[package]]
+name = "sui"
+version = "0.27.0"
+source = "git+https://github.com/MystenLabs/sui?branch=devnet#598f106ef5fbdfbe1b644236f0caf46c94f4d1b7"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "bcs",
+ "bip32",
+ "camino",
+ "clap 3.2.23",
+ "colored",
+ "const-str",
+ "fastcrypto",
+ "git-version",
+ "jemalloc-ctl",
+ "move-cli",
+ "move-core-types",
+ "move-package",
+ "move-prover",
+ "move-prover-boogie-backend",
+ "move-stackless-bytecode",
+ "move-unit-test",
+ "multiaddr",
+ "mysten-network",
+ "narwhal-executor",
+ "prettytable-rs",
+ "rocksdb",
+ "rustyline",
+ "rustyline-derive",
+ "serde 1.0.152",
+ "serde_json",
+ "serde_with 2.2.0",
+ "serde_yaml",
+ "shell-words",
+ "signature 1.6.4",
+ "sui-config",
+ "sui-core",
+ "sui-framework",
+ "sui-framework-build",
+ "sui-json",
+ "sui-json-rpc-types",
+ "sui-keys",
+ "sui-protocol-config",
+ "sui-sdk",
+ "sui-source-validation",
+ "sui-swarm",
+ "sui-types",
+ "telemetry-subscribers",
+ "tempfile",
+ "tokio",
+ "tracing",
+ "typed-store",
+ "typed-store-derive",
+ "unescape",
+ "workspace-hack",
+]
+
+[[package]]
 name = "sui-adapter"
 version = "0.1.0"
 source = "git+https://github.com/MystenLabs/sui?branch=devnet#598f106ef5fbdfbe1b644236f0caf46c94f4d1b7"
@@ -9717,6 +9776,46 @@ dependencies = [
 ]
 
 [[package]]
+name = "sui-node"
+version = "0.27.0"
+source = "git+https://github.com/MystenLabs/sui?branch=devnet#598f106ef5fbdfbe1b644236f0caf46c94f4d1b7"
+dependencies = [
+ "anemo",
+ "anemo-tower",
+ "anyhow",
+ "arc-swap",
+ "axum",
+ "chrono",
+ "clap 3.2.23",
+ "const-str",
+ "futures",
+ "git-version",
+ "multiaddr",
+ "mysten-metrics",
+ "mysten-network",
+ "narwhal-config",
+ "narwhal-network",
+ "narwhal-types",
+ "parking_lot 0.12.1",
+ "prometheus",
+ "sui-config",
+ "sui-core",
+ "sui-json-rpc",
+ "sui-network",
+ "sui-protocol-config",
+ "sui-simulator",
+ "sui-storage",
+ "sui-telemetry",
+ "sui-types",
+ "telemetry-subscribers",
+ "tokio",
+ "tower",
+ "tracing",
+ "typed-store",
+ "workspace-hack",
+]
+
+[[package]]
 name = "sui-open-rpc"
 version = "0.0.0"
 source = "git+https://github.com/MystenLabs/sui?branch=devnet#598f106ef5fbdfbe1b644236f0caf46c94f4d1b7"
@@ -9817,6 +9916,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "sui-source-validation"
+version = "0.1.0"
+source = "git+https://github.com/MystenLabs/sui?branch=devnet#598f106ef5fbdfbe1b644236f0caf46c94f4d1b7"
+dependencies = [
+ "anyhow",
+ "futures",
+ "move-binary-format",
+ "move-bytecode-utils",
+ "move-bytecode-verifier",
+ "move-compiler",
+ "move-core-types",
+ "move-package",
+ "move-symbol-pool",
+ "sui-framework",
+ "sui-framework-build",
+ "sui-sdk",
+ "sui-types",
+ "thiserror",
+ "workspace-hack",
+]
+
+[[package]]
 name = "sui-storage"
 version = "0.1.0"
 source = "git+https://github.com/MystenLabs/sui?branch=devnet#598f106ef5fbdfbe1b644236f0caf46c94f4d1b7"
@@ -9850,6 +9971,42 @@ dependencies = [
  "tracing",
  "typed-store",
  "typed-store-derive",
+ "workspace-hack",
+]
+
+[[package]]
+name = "sui-swarm"
+version = "0.0.0"
+source = "git+https://github.com/MystenLabs/sui?branch=devnet#598f106ef5fbdfbe1b644236f0caf46c94f4d1b7"
+dependencies = [
+ "anyhow",
+ "futures",
+ "mysten-metrics",
+ "mysten-network",
+ "prometheus",
+ "rand 0.8.5",
+ "sui-config",
+ "sui-node",
+ "sui-simulator",
+ "sui-types",
+ "tap",
+ "telemetry-subscribers",
+ "tempfile",
+ "tokio",
+ "tonic-health",
+ "tracing",
+ "workspace-hack",
+]
+
+[[package]]
+name = "sui-telemetry"
+version = "0.1.0"
+source = "git+https://github.com/MystenLabs/sui?branch=devnet#598f106ef5fbdfbe1b644236f0caf46c94f4d1b7"
+dependencies = [
+ "reqwest",
+ "serde 1.0.152",
+ "tokio",
+ "tracing",
  "workspace-hack",
 ]
 
