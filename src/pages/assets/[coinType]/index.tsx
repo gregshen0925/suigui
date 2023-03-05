@@ -3,11 +3,11 @@ import React from "react";
 
 type Props = {};
 
-const Sidebar = dynamic(() => import("./components/Sidebar"), {
+const Sidebar = dynamic(() => import("../components/Sidebar"), {
   ssr: false,
 });
 
-const AssetsPage = () => {
+const CoinPage = () => {
   return (
     <div className="flex pl-5 pt-[3rem]">
       <Sidebar />
@@ -15,4 +15,4 @@ const AssetsPage = () => {
   );
 };
 
-export default AssetsPage;
+export default CoinPage;

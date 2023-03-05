@@ -20,8 +20,6 @@ const Header = ({ setConnectModal }: Props) => {
 
   const pathname = router.pathname.split("/")[1];
 
-  console.log(pathname);
-
   const handleNav = () => {
     setNav(!nav);
   };
@@ -56,24 +54,28 @@ const Header = ({ setConnectModal }: Props) => {
         >
           <li className="transition duration-300 ease-in-out hover:scale-110">
             <Link href={"/ecosystem"}>
-              <button
-                className={`rounded-2xl ${
-                  pathname == "ecosystem" ? "bg-blue-600" : "bg-blue-700/30"
-                }  w-[130px] h-[50px]`}
+              <div
+                className={`${
+                  pathname == "ecosystem"
+                    ? "underline underline-offset-4 text-blue-600 text-xl"
+                    : ""
+                }  `}
               >
                 Ecosystem
-              </button>
+              </div>
             </Link>
           </li>
           <li className="transition duration-300 ease-in-out hover:scale-110">
             <Link href={"/assets"}>
-              <button
-                className={`rounded-2xl ${
-                  pathname == "assets" ? "bg-blue-600" : "bg-blue-700/30"
-                }  w-[130px] h-[50px]`}
+              <div
+                className={`${
+                  pathname == "assets"
+                    ? "underline underline-offset-4 text-blue-600 text-xl"
+                    : ""
+                }  `}
               >
                 Assets
-              </button>
+              </div>
             </Link>
           </li>
           <li className="">

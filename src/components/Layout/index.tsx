@@ -2,7 +2,6 @@ import { Suspense, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import ConnectModal from "../Modals/connect";
 import Header from "./Header";
-import Sidebar from "../../pages/assets/components/Sidebar";
 
 const toastOptions = {
   style: {

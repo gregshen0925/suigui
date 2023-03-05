@@ -1,9 +1,18 @@
+import dynamic from "next/dynamic";
 import React from "react";
 
 type Props = {};
 
-const index = (props: Props) => {
-  return <div>index</div>;
+const Sidebar = dynamic(() => import("./components/Sidebar"), {
+  ssr: false,
+});
+
+const EcosystemPage = (props: Props) => {
+  return (
+    <div className="flex pl-5 pt-[3rem]">
+      <Sidebar />
+    </div>
+  );
 };
 
-export default index;
+export default EcosystemPage;

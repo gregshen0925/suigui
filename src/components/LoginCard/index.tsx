@@ -103,7 +103,7 @@ const LoginCard = ({ setConnectModal }: Props) => {
               >
                 Import Seed Phrase
               </motion.button>
-              <div className="text-center text-white pt-10">
+              <div className="text-center text-white pt-10 px-4">
                 You seed phrase will only be stored in your local storage and
                 will not be sent to any server.
               </div>

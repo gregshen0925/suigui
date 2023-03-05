@@ -6,20 +6,20 @@ import { useRouter } from "next/router";
 
 const Sidebar = () => {
   const router = useRouter();
-  const pathname = router.query.coinType;
+  const pathname = router.query.project;
 
-  const coinTypes: string[] = ["Sui", "Eth"];
+  const projects: string[] = ["Capy", "InJoy"];
 
   return (
     <div className="hidden h-[80vh] max-w-xs flex-col p-5 md:flex md:min-w-[20rem] xl:min-w-[23rem] rounded-xl bg-white/30">
       <div className="">
         <p className="text-md text-center font-mono font-normal text-gray-700">
-          Assets
+          Projects
         </p>
         <ul className="my-4 space-y-3">
-          {coinTypes.map((coinType, index) => (
+          {projects.map((project, index) => (
             <li key={index}>
-              <Link href={`/assets/${coinType}`}>
+              <Link href={`/ecosystem/${project}`}>
                 <motion.button
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -29,12 +29,12 @@ const Sidebar = () => {
                 >
                   <span
                     className={` ${
-                      pathname == coinType
+                      pathname == project
                         ? "underline underline-offset-4 text-blue-600"
                         : ""
                     }`}
                   >
-                    {coinType}
+                    {project}
                   </span>
                 </motion.button>
               </Link>
