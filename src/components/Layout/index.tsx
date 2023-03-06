@@ -1,7 +1,7 @@
+import dynamic from "next/dynamic";
 import { Suspense, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import ConnectModal from "../Modals/connect";
-import Header from "./Header";
 
 const toastOptions = {
   style: {
@@ -26,6 +26,10 @@ const toastOptions = {
   },
   loading: { className: "border border-yello-300" },
 };
+
+const Header = dynamic(() => import("./Header"), {
+  ssr: false,
+});
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [connectModal, setConnectModal] = useState<boolean>(false);

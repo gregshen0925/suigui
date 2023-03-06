@@ -1,14 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, {
-  type Dispatch,
-  type SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import React, { type Dispatch, type SetStateAction, useState } from "react";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
+import { useActiveAddress } from "../../hooks/useActiveAddress";
+import { invoke } from "@tauri-apps/api";
 
 type Props = {
   setConnectModal: Dispatch<SetStateAction<boolean>>;
@@ -16,17 +13,31 @@ type Props = {
 
 const Header = ({ setConnectModal }: Props) => {
   const [nav, setNav] = useState<boolean>(false);
-  const router = useRouter();
 
+  const router = useRouter();
   const pathname = router.pathname.split("/")[1];
+
+  const { address, checkAddress } = useActiveAddress();
 
   const handleNav = () => {
     setNav(!nav);
   };
 
-  const handleModal = () => {
+  const handleCreateModal = () => {
     setNav(false);
     setConnectModal(true);
+  };
+  type GetAddressRes = {
+    error: string | null;
+    result: string | null;
+  };
+
+  const handleGetAddress = async () => {
+    const { error, result } = (await invoke(
+      "get_active_address"
+    )) as GetAddressRes;
+    console.log(result);
+    return { error, result };
   };
 
   return (
@@ -52,6 +63,14 @@ const Header = ({ setConnectModal }: Props) => {
           style={{ color: "white" }}
           className="hidden sm:flex sm:items-center font-bold space-x-8"
         >
+          <li>
+            <button
+              onClick={handleGetAddress}
+              className="bg-blue text-white px-4 py-2 rounded-xl"
+            >
+              Get Address
+            </button>
+          </li>
           <li className="transition duration-300 ease-in-out hover:scale-110">
             <Link href={"/ecosystem"}>
               <div
@@ -79,14 +98,24 @@ const Header = ({ setConnectModal }: Props) => {
             </Link>
           </li>
           <li className="">
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              whileHover={{ scale: 1.05 }}
-              onClick={handleModal}
-              className="flex w-[130px] h-[50px] text-lg items-center justify-center rounded-2xl bg-gradient-to-r from-sky-600 to-blue-600 font-bold text-white hover:from-blue-500 hover:to-sky-500"
-            >
-              Connect
-            </motion.button>
+            {address ? (
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.05 }}
+                className="flex w-[130px] h-[50px] text-lg items-center justify-center rounded-2xl bg-gradient-to-r from-sky-600 to-blue-600 font-bold text-white hover:from-blue-500 hover:to-sky-500"
+              >
+                {address}
+              </motion.button>
+            ) : (
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.05 }}
+                onClick={handleCreateModal}
+                className="flex w-[130px] h-[50px] text-lg items-center justify-center rounded-2xl bg-gradient-to-r from-sky-600 to-blue-600 font-bold text-white hover:from-blue-500 hover:to-sky-500"
+              >
+                Connect
+              </motion.button>
+            )}
           </li>
         </ul>
 
@@ -120,7 +149,7 @@ const Header = ({ setConnectModal }: Props) => {
               <Link href="/assets">Assets</Link>
             </li>
             <li
-              onClick={handleModal}
+              onClick={handleCreateModal}
               className="p-4 text-2xl hover:text-gray-500"
             >
               Connect
