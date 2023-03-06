@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React, { type Dispatch, type SetStateAction } from "react";
 import { motion } from "framer-motion";
-import { useCreateKey } from "../../hooks/useCreateKey";
+import { useCreateKey } from "../../hooks/sui/useCreateKey";
 
 type Props = {
   setConnectModal: Dispatch<SetStateAction<boolean>>;
@@ -67,11 +67,12 @@ const LoginCard = ({ setConnectModal }: Props) => {
               </div>
               <div className="flex justify-center pt-3 sm:pt-5">
                 <motion.button
+                  onClick={() => setConnectModal(false)}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   className="w-[250px] h-[50px] text-white bg-blue-600 rounded-2xl text-xl font-bold"
                 >
-                  Next
+                  Confirm
                 </motion.button>
               </div>
             </div>

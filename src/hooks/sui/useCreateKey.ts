@@ -1,13 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import type { CreateConfigResult, IpcResponse } from "../bindings";
-import { createNewKey } from "../utils/createNewKey";
-// import { createNewKey } from "../utils/createNewKey";
+import type { CreateConfigResult, IpcResponse } from "../../bindings";
+import { createNewKey } from "../../utils/createNewKey";
 
 export function useCreateKey() {
   const [createNewAddress, setCreateNewAddress] = useState<boolean>(false);
-  const isLogin = false;
   const [seedPhrase, setSeedPhrase] = useState<string[]>([]);
   const { data, refetch: getNewKey } = useQuery({
     queryKey: ["createNewKey"],

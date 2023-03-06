@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import { getActiveAddress } from "../utils/getActiveAddress";
+import { getActiveAddress } from "../../utils/getActiveAddress";
 
 export function useActiveAddress() {
   const [address, setAddress] = useState<string>("");
@@ -14,7 +14,6 @@ export function useActiveAddress() {
         setAddress(result);
         if (error) {
           toast.error("No active address found.");
-          console.log(error);
         }
       }
     },
