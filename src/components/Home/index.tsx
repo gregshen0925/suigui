@@ -30,7 +30,8 @@ const Home: NextPage = () => {
   return (
     <div className="">
       <div className="absolute z-[-1] top-0 bottom-0 left-0 right-0 bg-black/10" />
-      <div className="w-[300px]">
+
+      {/* <div className="w-[300px]">
         <form className="relative" onSubmit={handleSubmit}>
           <input
             className="block w-full p-4 text-sm text-white border border-gray-300 rounded-lg bg-white/20 outline-none placeholder:text-gray-200"
@@ -45,7 +46,7 @@ const Home: NextPage = () => {
             Enter
           </motion.button>
         </form>
-      </div>
+      </div> */}
     </div>
   );
 };

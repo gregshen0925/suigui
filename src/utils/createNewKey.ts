@@ -1,10 +1,9 @@
 import { invoke } from "@tauri-apps/api";
-// import { type CreateKeyResult } from "../bindings/CreateKeyResult";
+import { type IpcResponse, type CreateConfigResult } from "../bindings";
 
-// export const createNewKey = async () => {
-//   const { address, phrase, scheme } = (await invoke(
-//     "create_new_keypair"
-//   )) as CreateKeyResult;
-//   console.log(phrase);
-//   return phrase;
-// };
+export const createNewKey = async () => {
+  const { error, result } = (await invoke(
+    "create_new_config"
+  )) as IpcResponse<CreateConfigResult>;
+  return { error, result };
+};
