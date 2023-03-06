@@ -1,10 +1,8 @@
-use super::config::SUI_CLIENT_CONFIG;
+use super::config::{SUI_CLIENT_CONFIG, SUI_GUI_APP_NAME};
 use crate::ipc::IpcResponse;
 use anyhow::anyhow;
 use serde::Serialize;
-use std::path::PathBuf;
 use sui::client_commands::WalletContext;
-// use sui_json_rpc::coin_api::CoinReadApi;
 use ts_rs::TS;
 
 #[derive(Serialize, TS, Debug)]
@@ -37,17 +35,26 @@ pub struct SuiCoinResult {
 
 #[tauri::command]
 pub async fn get_remote_coins() -> IpcResponse<Vec<SuiCoinResult>> {
-    let config_path = PathBuf::from(SUI_CLIENT_CONFIG);
+    let config_dir = if let Some(d) = dirs::config_dir() {
+        d.join(SUI_GUI_APP_NAME)
+    } else {
+        return Err(anyhow!("Fail to obtain config directory")).into();
+    };
+
+    let config_path = config_dir.join(SUI_CLIENT_CONFIG);
+
     let mut wallet = if let Ok(w) = WalletContext::new(&config_path, None).await {
         w
     } else {
-        return Err(anyhow!("Fail to create wallet")).into();
+        return Err(anyhow!("Fail to get wallet")).into();
     };
+
     let address = if let Ok(addr) = wallet.active_address() {
         addr
     } else {
         return Err(anyhow!("No active address")).into();
     };
+
     if let Ok(client) = wallet.get_client().await {
         if let Ok(coins) = client
             .coin_read_api()
@@ -78,11 +85,18 @@ pub async fn get_remote_coins() -> IpcResponse<Vec<SuiCoinResult>> {
 
 #[tauri::command]
 pub async fn get_remote_objects() -> IpcResponse<Vec<SuiObjectResult>> {
-    let config_path = PathBuf::from(SUI_CLIENT_CONFIG);
+    let config_dir = if let Some(d) = dirs::config_dir() {
+        d.join(SUI_GUI_APP_NAME)
+    } else {
+        return Err(anyhow!("Fail to obtain config directory")).into();
+    };
+
+    let config_path = config_dir.join(SUI_CLIENT_CONFIG);
+
     let mut wallet = if let Ok(w) = WalletContext::new(&config_path, None).await {
         w
     } else {
-        return Err(anyhow!("Fail to create wallet")).into();
+        return Err(anyhow!("Fail to get wallet")).into();
     };
 
     let address = if let Ok(addr) = wallet.active_address() {
