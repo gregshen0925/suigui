@@ -3,7 +3,7 @@ import { toast } from "react-hot-toast";
 import { getRemoteObjects } from "../../utils/getRemoteObjects";
 
 export function useGetObjects() {
-  const { data, refetch: refetchObjects } = useQuery({
+  const { data: object, refetch: refetchObjects } = useQuery({
     queryKey: ["getRemoteObjects"],
     queryFn: getRemoteObjects,
     onSuccess: (data) => {
@@ -17,5 +17,5 @@ export function useGetObjects() {
     },
   });
 
-  return { data, refetchObjects };
+  return { object, refetchObjects };
 }

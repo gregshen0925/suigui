@@ -16,6 +16,7 @@ const Header = ({ setConnectModal }: Props) => {
   const pathname = router.pathname.split("/")[1];
 
   const { address, checkAddress } = useActiveAddress();
+  console.log(address);
 
   const handleNav = () => {
     setNav(!nav);

@@ -3,17 +3,14 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useGetCoins } from "../../../hooks/sui/useGetCoins";
+import { useGetCoinTypes } from "../../../hooks/sui/useGetCoinTypes";
+import { useGetObjects } from "../../../hooks/sui/useGetObjects";
 
 const Sidebar = () => {
   const router = useRouter();
   const pathname = router.query.coinType;
 
-  const coinTypes: string[] = ["Sui", "Eth"];
-
-  const { data } = useGetCoins();
-
-  console.log(data);
+  const { coinTypes } = useGetCoinTypes();
 
   return (
     <div className="hidden h-[80vh] max-w-xs flex-col p-5 md:flex md:min-w-[20rem] xl:min-w-[23rem] rounded-xl bg-white/30">
