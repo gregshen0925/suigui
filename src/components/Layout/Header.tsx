@@ -4,6 +4,7 @@ import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { useActiveAddress } from "../../hooks/sui/useActiveAddress";
+import { toast } from "react-hot-toast";
 
 type Props = {
   setConnectModal: Dispatch<SetStateAction<boolean>>;
@@ -16,7 +17,6 @@ const Header = ({ setConnectModal }: Props) => {
   const pathname = router.pathname.split("/")[1];
 
   const { address, checkAddress } = useActiveAddress();
-  console.log(address);
 
   const handleNav = () => {
     setNav(!nav);
@@ -25,6 +25,11 @@ const Header = ({ setConnectModal }: Props) => {
   const handleCreateModal = () => {
     setNav(false);
     setConnectModal(true);
+  };
+
+  const handleCopyText = () => {
+    navigator.clipboard.writeText(address);
+    toast.success("Copied Address");
   };
 
   return (
@@ -79,6 +84,7 @@ const Header = ({ setConnectModal }: Props) => {
           <li className="">
             {address ? (
               <motion.button
+                onClick={handleCopyText}
                 whileTap={{ scale: 0.95 }}
                 whileHover={{ scale: 1.05 }}
                 className="flex w-[130px] h-[50px] text-lg items-center justify-center rounded-2xl bg-gradient-to-r from-sky-600 to-blue-600 font-bold text-white hover:from-blue-500 hover:to-sky-500"
