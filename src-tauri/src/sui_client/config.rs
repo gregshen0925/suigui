@@ -2,7 +2,7 @@
 use crate::ipc::IpcResponse;
 use anyhow::anyhow;
 use serde::Serialize;
-use std::{fs, path::PathBuf};
+use std::fs;
 use sui::config::{Config, SuiClientConfig, SuiEnv};
 use sui_keys::keystore::{AccountKeystore, FileBasedKeystore, Keystore};
 use sui_sdk::types::crypto::SignatureScheme;
@@ -72,7 +72,12 @@ pub fn create_new_config() -> IpcResponse<CreateConfigResult> {
 
 #[tauri::command]
 pub fn get_active_address() -> IpcResponse<String> {
-    let config_path = PathBuf::from(SUI_CLIENT_CONFIG);
+    let config_dir = if let Some(d) = dirs::config_dir() {
+        d.join(SUI_GUI_APP_NAME)
+    } else {
+        return Err(anyhow!("Fail to obtain config directory")).into();
+    };
+    let config_path = config_dir.join(SUI_CLIENT_CONFIG);
     if let Ok(config) = SuiClientConfig::load(config_path) {
         if let Some(address) = config.active_address {
             Ok(address.to_string()).into()
