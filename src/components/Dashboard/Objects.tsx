@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
-import { getCoinsByType } from "../../../utils/getCoinsByType";
-import { type SuiCoinResult } from "../../../bindings";
+import { type SuiCoinResult } from "../../bindings";
+import { getCoinsByType } from "../../utils/getCoinsByType";
 
 type Props = {
   selectedCoin: string;

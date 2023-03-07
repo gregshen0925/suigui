@@ -2,13 +2,8 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import dynamic from "next/dynamic";
 import { useState } from "react";
-
-const SelectButton = dynamic(() => import("./SelectButton"), {
-  ssr: false,
-});
-const Objects = dynamic(() => import("./Objects"), {
-  ssr: false,
-});
+import Objects from "./Objects";
+import SelectButton from "./SelectButton";
 
 const Sidebar = () => {
   const [selectedCoin, setSelectedCoin] = useState<string>("0x2::sui::SUI");

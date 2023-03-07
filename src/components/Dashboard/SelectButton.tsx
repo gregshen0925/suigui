@@ -1,5 +1,5 @@
 import React, { type Dispatch, type SetStateAction } from "react";
-import { useGetCoinTypes } from "../../../hooks/sui/useGetCoinTypes";
+import { useGetCoinTypes } from "../../hooks/sui/useGetCoinTypes";
 
 type Props = {
   selectedCoin: string;
