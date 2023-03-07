@@ -11,8 +11,12 @@ fn greet(name: &str) -> String {
 mod ipc;
 mod sui_client;
 use crate::sui_client::{
-    config::{create_new_config, get_active_address},
-    object::{get_remote_coins, get_remote_objects},
+    // config
+    create_new_config,
+    get_active_address,
+    // object
+    get_remote_coins,
+    get_remote_objects,
 };
 use anyhow::Result;
 
@@ -21,8 +25,10 @@ async fn main() -> Result<()> {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             greet,
+            //config
             create_new_config,
             get_active_address,
+            // object
             get_remote_objects,
             get_remote_coins,
         ])

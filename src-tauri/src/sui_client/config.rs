@@ -1,10 +1,11 @@
-// use std::collections::HashMap;
-use crate::ipc::IpcResponse;
-use anyhow::anyhow;
+use anyhow::{anyhow, Result};
 use serde::Serialize;
 use std::fs;
+use std::path::PathBuf;
+use sui::client_commands::WalletContext;
 use sui::config::{Config, SuiClientConfig, SuiEnv};
 use sui_keys::keystore::{AccountKeystore, FileBasedKeystore, Keystore};
+use sui_sdk::types::base_types::SuiAddress;
 use sui_sdk::types::crypto::SignatureScheme;
 use ts_rs::TS;
 
@@ -17,37 +18,50 @@ pub struct CreateConfigResult {
 }
 
 pub const SUI_GUI_APP_NAME: &str = "Sui GUI";
-pub const SUI_CLIENT_CONFIG: &str = "suigui_config.yaml";
+pub const SUI_CLIENT_CONFIG_FILENAME: &str = "suigui_config.yaml";
 pub const SUI_KEYSTORE_FILENAME: &str = "suigui.keystore";
 
-#[tauri::command]
-pub fn create_new_config() -> IpcResponse<CreateConfigResult> {
-    let config_dir = if let Some(d) = dirs::config_dir() {
-        d.join(SUI_GUI_APP_NAME)
+pub fn suigui_config_dir() -> Result<PathBuf> {
+    if let Some(d) = dirs::config_dir() {
+        let suigui_config_dir = d.join(SUI_GUI_APP_NAME);
+        if !suigui_config_dir.exists() && fs::create_dir_all(&suigui_config_dir).is_err() {
+            return Err(anyhow!("Fail to create config directory"));
+        }
+        Ok(suigui_config_dir)
     } else {
-        return Err(anyhow!("Fail to obtain config directory")).into();
-    };
+        return Err(anyhow!("Fail to obtain config directory"));
+    }
+}
 
-    let config_path = config_dir.join(SUI_CLIENT_CONFIG);
-    let keystore_path = config_dir.join(SUI_KEYSTORE_FILENAME);
+pub fn suigui_config_path() -> Result<PathBuf> {
+    Ok(suigui_config_dir()?.join(SUI_CLIENT_CONFIG_FILENAME))
+}
 
-    if !config_dir.exists() && fs::create_dir_all(&config_dir).is_err() {
-        return Err(anyhow!("Fail to create config directory")).into();
-    };
+pub fn suigui_keystore_path() -> Result<PathBuf> {
+    Ok(suigui_config_dir()?.join(SUI_KEYSTORE_FILENAME))
+}
 
-    let keystore_path = if let Ok(k) = FileBasedKeystore::new(&keystore_path) {
-        k
-    } else {
-        return Err(anyhow!("Fail to create keystore file")).into();
-    };
+pub async fn get_wallet_context() -> Result<(WalletContext, SuiAddress)> {
+    let mut wallet = WalletContext::new(&suigui_config_path()?, None)
+        .await
+        .or(Err(anyhow!("Fail to get wallet context")))?;
+    let active_addrss = wallet
+        .active_address()
+        .or(Err(anyhow!("No active address")))?;
+    Ok((wallet, active_addrss))
+}
+
+pub fn create_new_config() -> Result<CreateConfigResult> {
+    let config_path = suigui_config_path()?;
+    let keystore_path = suigui_keystore_path()?;
+
+    let keystore_path =
+        FileBasedKeystore::new(&keystore_path).or(Err(anyhow!("Fail to create keystore file")))?;
 
     let mut keystore = Keystore::from(keystore_path);
-    let (new_address, phrase, scheme) =
-        if let Ok(key_result) = keystore.generate_and_add_new_key(SignatureScheme::ED25519, None) {
-            key_result
-        } else {
-            return Err(anyhow!("Fail to generate new key")).into();
-        };
+    let (new_address, phrase, scheme) = keystore
+        .generate_and_add_new_key(SignatureScheme::ED25519, None)
+        .or(Err(anyhow!("Fail to generate new key")))?;
 
     let sui_env = SuiEnv::devnet();
     let sui_alias = sui_env.alias.clone();
@@ -58,33 +72,23 @@ pub fn create_new_config() -> IpcResponse<CreateConfigResult> {
         active_address: Some(new_address),
         active_env: Some(sui_alias),
     };
-    if sui_client_config.persisted(&config_path).save().is_err() {
-        return Err(anyhow!("Fail to save config file")).into();
-    };
+    sui_client_config
+        .persisted(&config_path)
+        .save()
+        .or(Err(anyhow!("Fail to save config file")))?;
 
     Ok(CreateConfigResult {
         address: new_address.to_string(),
         phrase,
         scheme: scheme.to_string(),
     })
-    .into()
 }
 
-#[tauri::command]
-pub fn get_active_address() -> IpcResponse<String> {
-    let config_dir = if let Some(d) = dirs::config_dir() {
-        d.join(SUI_GUI_APP_NAME)
-    } else {
-        return Err(anyhow!("Fail to obtain config directory")).into();
-    };
-    let config_path = config_dir.join(SUI_CLIENT_CONFIG);
-    if let Ok(config) = SuiClientConfig::load(config_path) {
-        if let Some(address) = config.active_address {
-            Ok(address.to_string()).into()
-        } else {
-            Err(anyhow!("No active address")).into()
-        }
-    } else {
-        Err(anyhow!("Config not exists")).into()
+pub fn get_active_address() -> Result<String> {
+    let config_path = suigui_config_path()?;
+    let suigui_config = SuiClientConfig::load(config_path).or(Err(anyhow!("Config not exists")))?;
+    match suigui_config.active_address {
+        Some(address) => Ok(address.to_string()),
+        None => Err(anyhow!("No active address")),
     }
 }
