@@ -27,9 +27,8 @@ const Home: NextPage = () => {
   };
 
   return (
-    <div className="">
-      <div className="absolute z-[-1] top-0 bottom-0 left-0 right-0 bg-black/10" />
-
+    <div className="bg-black">
+      <div className="absolute z-[-1] top-0 bottom-0 left-0 right-0" />
       {/* <div className="w-[300px]">
         <form className="relative" onSubmit={handleSubmit}>
           <input

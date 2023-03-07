@@ -44,7 +44,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         }
       >
         <div className="">
-          <div className="custom-img2 z-[-2] h-screen bg-cover bg-fixed">
+          {/* <div className="custom-img2 z-[-2] h-screen bg-cover bg-fixed"> */}
+          <div className="bg-black min-h-screen">
             <div className="max-h-screen">
               <Header setConnectModal={setConnectModal} />
               {connectModal ? (

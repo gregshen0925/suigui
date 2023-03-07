@@ -12,7 +12,7 @@ const SelectButton = ({ selectedCoin, setSelectedCoin }: Props) => {
   return (
     <div className="flex z-[1] p-5 items-center">
       <div className="dropdown inline-block relative">
-        <button className="bg-blue-600 text-white font-semibold py-3 justify-center rounded hover:rounded-t flex items-center w-[180px]">
+        <button className="bg-black text-white font-semibold py-3 justify-center rounded hover:rounded-t flex items-center w-[180px]">
           <div className="pl-4">{selectedCoin}</div>
           <svg
             className="fill-current h-4 w-4"
@@ -24,7 +24,7 @@ const SelectButton = ({ selectedCoin, setSelectedCoin }: Props) => {
         </button>
         <ul className="dropdown-menu absolute hidden text-white w-[180px]">
           {isLoading || isFetching ? (
-            <div className="rounded-b bg-blue-500 py-2 w-[180px] block whitespace-no-wrap">
+            <div className="rounded-b-lg bg-gray-900 py-2 w-[180px] block whitespace-no-wrap">
               <div role="status" className="flex justify-center">
                 <svg
                   aria-hidden="true"
@@ -50,7 +50,7 @@ const SelectButton = ({ selectedCoin, setSelectedCoin }: Props) => {
               <li className="" key={index}>
                 <button
                   onClick={() => setSelectedCoin(coinType)}
-                  className="first:rounded-t last:rounded-b bg-blue-500 hover:bg-blue-400 py-2 w-[180px] block whitespace-no-wrap"
+                  className="first:rounded-t last:rounded-b bg-gray-700 hover:bg-gray-600 py-2 w-[180px] block whitespace-no-wrap"
                 >
                   {coinType}
                 </button>
@@ -58,7 +58,7 @@ const SelectButton = ({ selectedCoin, setSelectedCoin }: Props) => {
             ))
           ) : (
             <li className="">
-              <div className="rounded-b bg-blue-500 py-2 px-4 block whitespace-no-wrap w-[180px]">
+              <div className="rounded-b bg-gray-900 py-2 px-4 block whitespace-no-wrap w-[180px]">
                 No Assets
               </div>
             </li>
