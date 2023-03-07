@@ -240,6 +240,7 @@ dependencies = [
  "sui-types",
  "tauri",
  "tauri-build",
+ "tauri-plugin-store",
  "tokio",
  "ts-rs",
 ]
@@ -10387,6 +10388,18 @@ dependencies = [
  "syn 1.0.109",
  "tauri-codegen",
  "tauri-utils",
+]
+
+[[package]]
+name = "tauri-plugin-store"
+version = "0.1.0"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=dev#494a029a107060a350e814caecebeafc86909df0"
+dependencies = [
+ "log",
+ "serde 1.0.152",
+ "serde_json",
+ "tauri",
+ "thiserror",
 ]
 
 [[package]]

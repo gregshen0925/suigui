@@ -5,7 +5,7 @@ use serde::Serialize;
 use std::str::FromStr;
 use sui::client_commands::call_move;
 use sui_json::SuiJsonValue;
-use sui_json_rpc_types::SuiTransactionResponse;
+use sui_json_rpc_types::{CoinPage, SuiTransactionResponse};
 use sui_types::base_types::ObjectID;
 use ts_rs::TS;
 
@@ -21,11 +21,17 @@ pub struct SuiCoinResult {
     // previous_transaction: String,
 }
 
-// #[derive(Serialize, TS, Debug)]
-// #[ts(export, export_to = "../src/bindings/")]
-// pub struct CoinTransferResult {
-
-// }
+pub async fn get_coins_by_coin_type(coin_type: String) -> Result<CoinPage> {
+    let (wallet, active_address) = config::get_wallet_context().await?;
+    wallet
+        .get_client()
+        .await
+        .or(Err(anyhow!("Fail to get client")))?
+        .coin_read_api()
+        .get_coins(active_address, Some(coin_type), None, None)
+        .await
+        .or(Err(anyhow!("Fail to get coins")))
+}
 
 pub async fn get_remote_coins() -> Result<Vec<SuiCoinResult>> {
     let (wallet, active_address) = config::get_wallet_context().await?;

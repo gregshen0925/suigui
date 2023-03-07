@@ -5,7 +5,7 @@ use crate::ipc::IpcResponse;
 use coin::SuiCoinResult;
 use config::CreateConfigResult;
 use object::SuiObjectResult;
-use sui_json_rpc_types::SuiTransactionResponse;
+use sui_json_rpc_types::{CoinPage, SuiTransactionResponse};
 
 #[tauri::command]
 pub async fn create_new_config() -> IpcResponse<CreateConfigResult> {
@@ -32,6 +32,11 @@ pub async fn split_and_transfer(
     coin::split_and_transfer(&coin_type, &coin_id, amount, &receipent)
         .await
         .into()
+}
+
+#[tauri::command]
+pub async fn get_coins_by_coin_type(coin_type: String) -> IpcResponse<CoinPage> {
+    coin::get_coins_by_coin_type(coin_type).await.into()
 }
 
 #[tauri::command]
