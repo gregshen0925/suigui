@@ -17,11 +17,19 @@ const Sidebar = () => {
 
   return (
     <div className="h-[80vh] w-full flex-col p-5 rounded-xl bg-sky-100">
-      <SelectButton
-        setSelectedCoin={setSelectedCoin}
-        selectedCoin={selectedCoin}
-      />
-      <div>
+      <div className="grid grid-cols-3 items-center">
+        <div className="col-span-1">
+          <SelectButton
+            setSelectedCoin={setSelectedCoin}
+            selectedCoin={selectedCoin}
+          />
+        </div>
+        <div className="font-mono font-bold text-xl col-span-1 text-center">
+          <div>Active</div>
+          <div>{selectedCoin}</div>
+        </div>
+      </div>
+      <div className="">
         <Objects selectedCoin={selectedCoin || ""} />
       </div>
     </div>
