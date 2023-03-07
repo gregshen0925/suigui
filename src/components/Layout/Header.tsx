@@ -5,10 +5,22 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { useActiveAddress } from "../../hooks/sui/useActiveAddress";
 import { toast } from "react-hot-toast";
+import { Links } from "../../../types";
 
 type Props = {
   setConnectModal: Dispatch<SetStateAction<boolean>>;
 };
+
+const Links: Links[] = [
+  {
+    name: "Home",
+    url: "/",
+  },
+  {
+    name: "Dashboard",
+    url: "/dashboard",
+  },
+];
 
 const Header = ({ setConnectModal }: Props) => {
   const [nav, setNav] = useState<boolean>(false);
@@ -55,32 +67,18 @@ const Header = ({ setConnectModal }: Props) => {
           style={{ color: "white" }}
           className="hidden sm:flex sm:items-center font-bold space-x-8"
         >
-          <li className="transition duration-300 ease-in-out hover:scale-110">
-            <Link href={"/ecosystem"}>
-              <div
-                className={`${
-                  pathname == "ecosystem"
-                    ? "underline underline-offset-4 text-blue-600 text-xl"
-                    : ""
-                }  `}
-              >
-                Ecosystem
-              </div>
-            </Link>
-          </li>
-          <li className="transition duration-300 ease-in-out hover:scale-110">
-            <Link href={"/assets"}>
-              <div
-                className={`${
-                  pathname == "assets"
-                    ? "underline underline-offset-4 text-blue-600 text-xl"
-                    : ""
-                }  `}
-              >
-                Assets
-              </div>
-            </Link>
-          </li>
+          {Links.map((link, index) => (
+            <li
+              key={index}
+              className={`text-xl text-white font-bold ${
+                pathname == link.url.split("/")[1]
+                  ? "text-blue-600 underline-offset-4 underline"
+                  : ""
+              } `}
+            >
+              <Link href={`${link.url}`}>{link.name}</Link>
+            </li>
+          ))}
           <li className="">
             {address ? (
               <motion.button
@@ -121,17 +119,17 @@ const Header = ({ setConnectModal }: Props) => {
           }
         >
           <ul>
-            <li
+            {/* <li
               onClick={handleNav}
               className="p-4 text-2xl hover:text-gray-500"
             >
               <Link href="/ecosystem">Ecosystem</Link>
-            </li>
+            </li> */}
             <li
               onClick={handleNav}
               className="p-4 text-2xl hover:text-gray-500"
             >
-              <Link href="/assets">Assets</Link>
+              <Link href="/dashboard">Dashboard</Link>
             </li>
             <li
               onClick={handleCreateModal}

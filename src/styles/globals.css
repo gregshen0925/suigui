@@ -9,3 +9,7 @@
 .custom-img2 {
   background-image: url("../public/water-bg-2.jpeg");
 }
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
