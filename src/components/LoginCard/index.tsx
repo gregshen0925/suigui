@@ -2,6 +2,7 @@
 import React, { type Dispatch, type SetStateAction } from "react";
 import { motion } from "framer-motion";
 import { useCreateKey } from "../../hooks/sui/useCreateKey";
+import { useActiveAddress } from "../../hooks/sui/useActiveAddress";
 
 type Props = {
   setConnectModal: Dispatch<SetStateAction<boolean>>;
@@ -9,8 +10,13 @@ type Props = {
 
 const LoginCard = ({ setConnectModal }: Props) => {
   const { createNewAddress, seedPhrase, getNewKey } = useCreateKey();
+  const { checkAddress } = useActiveAddress();
   const handleCreateNewConfig = async () => {
     getNewKey();
+  };
+  const handleConfirm = () => {
+    checkAddress();
+    setConnectModal(false);
   };
 
   return (
@@ -67,7 +73,7 @@ const LoginCard = ({ setConnectModal }: Props) => {
               </div>
               <div className="flex justify-center pt-3 sm:pt-5">
                 <motion.button
-                  onClick={() => setConnectModal(false)}
+                  onClick={handleConfirm}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   className="w-[250px] h-[50px] text-white bg-blue-600 rounded-2xl text-xl font-bold"

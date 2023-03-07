@@ -1,1 +1,1 @@
-# Nextjs + TailwindCSS + Tauri
+Sui GUI is a

@@ -9,8 +9,10 @@ const Sidebar = dynamic(() => import("./components/Sidebar"), {
 
 const AssetsPage = () => {
   return (
-    <div className="flex pl-5 pt-[3rem]">
-      <Sidebar />
+    <div className="flex pt-[3rem]">
+      <div className="flex pl-5 ">
+        <Sidebar />
+      </div>
     </div>
   );
 };

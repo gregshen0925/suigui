@@ -15,7 +15,7 @@ const Sidebar = () => {
   return (
     <div className="hidden h-[80vh] max-w-xs flex-col p-5 md:flex md:min-w-[20rem] xl:min-w-[23rem] rounded-xl bg-white/30">
       <div className="">
-        <p className="text-md text-center font-mono font-normal text-gray-700">
+        <p className="text-xl text-center font-mono font-normal text-gray-700">
           Assets
         </p>
         <ul className="my-4 space-y-3">
