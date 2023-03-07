@@ -2,10 +2,11 @@ use super::config;
 use anyhow::{anyhow, Result};
 use move_core_types::language_storage::TypeTag;
 use serde::Serialize;
+use serde_json::Value;
 use std::str::FromStr;
 use sui::client_commands::call_move;
 use sui_json::SuiJsonValue;
-use sui_json_rpc_types::{CoinPage, SuiTransactionResponse};
+use sui_json_rpc_types::SuiTransactionResponse;
 use sui_types::base_types::ObjectID;
 use ts_rs::TS;
 
@@ -110,46 +111,51 @@ pub async fn split_and_transfer(
     })
 }
 
-// pub async fn merge_coins(coin_type: &str, coins: Vec<String>) -> Result<SuiTransactionResponse> {
-//     let (mut wallet, _) = config::get_wallet_context().await?;
+pub async fn merge_coins(coin_type: &str, coins: Vec<String>) -> Result<SuiTransactionResponse> {
+    let (mut wallet, _) = config::get_wallet_context().await?;
 
-//     let package_id = ObjectID::from_hex_literal("0x2").unwrap();
-//     let coins: Vec<SuiJsonValue> = coins
-//         .into_iter()
-//         .map(|cid| {
-//             SuiJsonValue::from_object_id(
-//                 ObjectID::from_hex_literal(&cid).or(Err(anyhow!("Invalid object ID")))?,
-//             )
-//         })
-//         .collect();
-//     let coin_type = TypeTag::from_str(coin_type).or(Err(anyhow!("Invalid coin type")))?;
+    if coins.len() < 2 {
+        return Err(anyhow!("At least two objects to merge"));
+    }
 
-//     if coins.len() < 2 {
-//         return Err(anyhow!("At least two object to merge"));
-//     }
+    let package_id = ObjectID::from_hex_literal("0x2").unwrap();
+    let mut coins: Vec<SuiJsonValue> = coins
+        .into_iter()
+        .map(|c_str| ObjectID::from_hex_literal(&c_str).or(Err(anyhow!("Invalid object ID"))))
+        .collect::<Result<Vec<ObjectID>>>()?
+        .into_iter()
+        .map(SuiJsonValue::from_object_id)
+        .collect();
 
-//     let dist_coin_id = coins.pop().unwrap();
+    let coin_type = TypeTag::from_str(coin_type).or(Err(anyhow!("Invalid coin type")))?;
 
-//     let rest_coins = SuiJsonValue::new(coins)?;
+    let dist_coin_id = coins.pop().unwrap();
 
-//     let (certificate, effects) = call_move(
-//         package_id,
-//         "pay",
-//         "join_vec",
-//         vec![coin_type],
-//         None,
-//         10000u64,
-//         vec![dist_coin_id, rest_coins],
-//         &mut wallet,
-//     )
-//     .await
-//     .or(Err(anyhow!("Fail to split and transfer")))?;
+    let rest_coin_ids = coins
+        .into_iter()
+        .map(|cid| cid.to_json_value())
+        .collect::<Vec<Value>>();
 
-//     Ok(SuiTransactionResponse {
-//         certificate,
-//         effects,
-//         timestamp_ms: None,
-//         checkpoint: None,
-//         parsed_data: None,
-//     })
-// }
+    let rest_coin_ids = SuiJsonValue::new(Value::from(rest_coin_ids))?;
+
+    let (certificate, effects) = call_move(
+        package_id,
+        "pay",
+        "join_vec",
+        vec![coin_type],
+        None,
+        10000u64,
+        vec![dist_coin_id, rest_coin_ids],
+        &mut wallet,
+    )
+    .await
+    .or(Err(anyhow!("Fail to split and transfer")))?;
+
+    Ok(SuiTransactionResponse {
+        certificate,
+        effects,
+        timestamp_ms: None,
+        checkpoint: None,
+        parsed_data: None,
+    })
+}
