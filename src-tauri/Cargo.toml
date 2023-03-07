@@ -20,7 +20,7 @@ tokio = { version = "1", features = ["full"] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_with_macros = "2"
-tauri = { version = "1", features = [] }
+tauri = { version = "1.2.4", features = [] }
 tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "dev" }
 parking_lot = "0.12"
 ts-rs = { version = "6" }

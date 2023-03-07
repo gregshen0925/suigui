@@ -22,7 +22,7 @@ async fn main() -> Result<()> {
         .plugin(tauri_plugin_store::Builder::default().build())
         .invoke_handler(tauri::generate_handler![
             greet,
-            //config
+            // config
             create_new_config,
             get_active_address,
             // coin
