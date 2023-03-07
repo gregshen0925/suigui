@@ -35,7 +35,7 @@ pub async fn split_and_transfer(
 }
 
 #[tauri::command]
-pub async fn get_coins_by_coin_type(coin_type: String) -> IpcResponse<CoinPage> {
+pub async fn get_coins_by_coin_type(coin_type: String) -> IpcResponse<Vec<SuiCoinResult>> {
     coin::get_coins_by_coin_type(coin_type).await.into()
 }
 
