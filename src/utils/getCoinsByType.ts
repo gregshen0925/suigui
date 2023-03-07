@@ -1,8 +1,8 @@
 import { invoke } from "@tauri-apps/api";
 import type { IpcResponse, SuiCoinResult } from "../bindings";
 
-export const getObjectsByType = async (coinType: string) => {
-  const { result } = (await invoke("get_remote_coins", {
+export const getCoinsByType = async (coinType: string) => {
+  const { result } = (await invoke("get_coins_by_coin_type", {
     coinType: coinType,
   })) as IpcResponse<SuiCoinResult[]>;
 
