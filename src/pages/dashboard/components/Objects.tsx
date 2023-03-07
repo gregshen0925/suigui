@@ -2,18 +2,21 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { type Object } from "../../../../types";
+import { useGetObjects } from "../../../hooks/sui/useGetObjects";
 import { getObjectsByType } from "../../../utils/getObjectsByType";
 
 type Props = {
   selectedCoin: string;
 };
+const dummyObjects = [
+  { ObjectId: "1vnjeovjwerdnvwre", balance: 1 },
+  { ObjectId: "2vfejiojvrkevm", balance: 2 },
+  { ObjectId: "3vmeiowgmlkremgrlk", balance: 3 },
+];
 
 const Objects = ({ selectedCoin }: Props) => {
-  const [objects, setObjects] = useState<Object[]>([
-    { ObjectId: "1vnjeovjwerdnvwre", balance: 1 },
-    { ObjectId: "2vfejiojvrkevm", balance: 2 },
-    { ObjectId: "3vmeiowgmlkremgrlk", balance: 3 },
-  ]);
+  const [objects, setObjects] = useState<Object[]>();
+  const { object } = useGetObjects();
   const handleOnDrag = (
     e: React.DragEvent<HTMLDivElement>,
     objectId: string
