@@ -7,10 +7,16 @@ export const getRemoteCoinTypes = async () => {
   >;
   const coinTypes: string[] = [];
 
-  result?.map(
-    (coin) =>
-      coinTypes.indexOf(coin?.coin_type || "") === -1 &&
-      coinTypes.push(coin?.coin_type || "")
-  );
+  if (result) {
+    result?.map(
+      (coin) =>
+        coinTypes.indexOf(coin?.coin_type || "") === -1 &&
+        coinTypes.push(coin?.coin_type || "")
+    );
+    if (error) {
+      console.log(error);
+    }
+  }
+
   return { coinTypes };
 };

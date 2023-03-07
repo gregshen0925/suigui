@@ -2,8 +2,8 @@ import React, { type Dispatch, type SetStateAction } from "react";
 import { useGetCoinTypes } from "../../../hooks/sui/useGetCoinTypes";
 
 type Props = {
-  selectedCoin: string | undefined;
-  setSelectedCoin: Dispatch<SetStateAction<string | undefined>>;
+  selectedCoin: string;
+  setSelectedCoin: Dispatch<SetStateAction<string>>;
 };
 
 const SelectButton = ({ selectedCoin, setSelectedCoin }: Props) => {
@@ -12,8 +12,8 @@ const SelectButton = ({ selectedCoin, setSelectedCoin }: Props) => {
   return (
     <div className="flex z-[1] p-5 items-center">
       <div className="dropdown inline-block relative">
-        <button className="bg-blue-800 text-white font-semibold py-2 justify-center rounded flex items-center w-[180px]">
-          <div className="">{selectedCoin ? selectedCoin : "Select"}</div>
+        <button className="bg-blue-600 text-white font-semibold py-3 justify-center rounded hover:rounded-t flex items-center w-[180px]">
+          <div className="pl-4">{selectedCoin}</div>
           <svg
             className="fill-current h-4 w-4"
             xmlns="http://www.w3.org/2000/svg"
@@ -22,7 +22,7 @@ const SelectButton = ({ selectedCoin, setSelectedCoin }: Props) => {
             <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />{" "}
           </svg>
         </button>
-        <ul className="dropdown-menu absolute hidden text-white pt-1 w-[180px]">
+        <ul className="dropdown-menu absolute hidden text-white w-[180px]">
           {isLoading || isFetching ? (
             <div className="rounded-b bg-blue-500 py-2 w-[180px] block whitespace-no-wrap">
               <div role="status" className="flex justify-center">

@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 
 import { invoke } from "@tauri-apps/api";
 import { toast } from "react-hot-toast";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 

@@ -6,11 +6,6 @@ import { type SuiCoinResult } from "../../../bindings";
 type Props = {
   selectedCoin: string;
 };
-const dummyObjects = [
-  { ObjectId: "1vnjeovjwerdnvwre", balance: 1 },
-  { ObjectId: "2vfejiojvrkevm", balance: 2 },
-  { ObjectId: "3vmeiowgmlkremgrlk", balance: 3 },
-];
 
 const Objects = ({ selectedCoin }: Props) => {
   const [objects, setObjects] = useState<SuiCoinResult[]>([]);
@@ -43,7 +38,6 @@ const Objects = ({ selectedCoin }: Props) => {
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
-  console.log(selectedCoin);
 
   const {
     refetch: refetchCoins,
@@ -53,13 +47,15 @@ const Objects = ({ selectedCoin }: Props) => {
     queryKey: ["getCoinsByType"],
     queryFn: () => getCoinsByType(selectedCoin),
     onSuccess: (data) => {
-      const { result } = data;
+      const { error, result } = data;
       if (result) {
         setObjects(result);
         console.log(result);
+        if (error) {
+          console.log(error);
+        }
       }
     },
-    enabled: selectedCoin !== "",
   });
 
   return (
@@ -70,7 +66,7 @@ const Objects = ({ selectedCoin }: Props) => {
             <div role="status ">
               <svg
                 aria-hidden="true"
-                className="inline w-10 h-10 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                className="inline w-10 h-10 mr-2 text-blue-600 animate-spin fill-white"
                 viewBox="0 0 100 101"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
