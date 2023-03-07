@@ -92,7 +92,7 @@ const Objects = ({ selectedCoin }: Props) => {
                 // onDragOver={handleDragOver}
                 draggable
                 onDragStart={(e) => handleOnDrag(e, object.coin_id)}
-                className="m-2 w-[130px] h-[130px] rounded-full bg-blue-700 text-white flex flex-col justify-center items-center"
+                className="m-2 w-[130px] h-[130px] rounded-full bg-white/30 text-white flex flex-col justify-center items-center"
               >
                 <div className="absolute w-[130px] h-[130px] z-[1] m-2 rounded-full" />
                 <div className=" text-center font-bold text-white">
