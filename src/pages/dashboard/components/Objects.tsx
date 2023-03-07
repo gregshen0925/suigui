@@ -16,7 +16,6 @@ const dummyObjects = [
 
 const Objects = ({ selectedCoin }: Props) => {
   const [objects, setObjects] = useState<Object[]>();
-  const { object } = useGetObjects();
   const handleOnDrag = (
     e: React.DragEvent<HTMLDivElement>,
     objectId: string
