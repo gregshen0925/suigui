@@ -9,6 +9,7 @@ fn greet(name: &str) -> String {
 }
 
 mod ipc;
+// mod store;
 mod sui_client;
 use crate::sui_client::{
     create_new_config, get_active_address, get_coins_by_coin_type, get_remote_coins,
@@ -19,7 +20,6 @@ use anyhow::Result;
 #[tokio::main]
 async fn main() -> Result<()> {
     tauri::Builder::default()
-        .plugin(tauri_plugin_store::Builder::default().build())
         .invoke_handler(tauri::generate_handler![
             greet,
             // config

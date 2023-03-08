@@ -21,7 +21,6 @@ serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_with_macros = "2"
 tauri = { version = "1.2.4", features = [] }
-tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "dev" }
 parking_lot = "0.12"
 ts-rs = { version = "6" }
 sui-sdk = { git = "https://github.com/MystenLabs/sui", branch = "devnet"}
@@ -31,6 +30,7 @@ sui-types = { git = "https://github.com/MystenLabs/sui", branch = "devnet"}
 sui-json = { git = "https://github.com/MystenLabs/sui", branch = "devnet"}
 sui-json-rpc-types = { git = "https://github.com/MystenLabs/sui", branch = "devnet"}
 move-core-types = { git = "https://github.com/move-language/move", rev = "7343821f67c070d28dcdb5bf7d2e07ced046b52f", features = ["address20"] }
+surrealdb = {version = "1.0.0-beta.8", default-features=false, features = ['parallel', 'kv-mem'] }
 
 [features]
 # by default Tauri runs in production mode
