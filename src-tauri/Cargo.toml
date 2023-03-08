@@ -31,7 +31,6 @@ sui-types = { git = "https://github.com/MystenLabs/sui", branch = "devnet"}
 sui-json = { git = "https://github.com/MystenLabs/sui", branch = "devnet"}
 sui-json-rpc-types = { git = "https://github.com/MystenLabs/sui", branch = "devnet"}
 move-core-types = { git = "https://github.com/move-language/move", rev = "7343821f67c070d28dcdb5bf7d2e07ced046b52f", features = ["address20"] }
-dirs = "4"
 
 [features]
 # by default Tauri runs in production mode

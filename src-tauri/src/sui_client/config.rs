@@ -7,6 +7,7 @@ use sui::config::{Config, SuiClientConfig, SuiEnv};
 use sui_keys::keystore::{AccountKeystore, FileBasedKeystore, Keystore};
 use sui_sdk::types::base_types::SuiAddress;
 use sui_sdk::types::crypto::SignatureScheme;
+use tauri::api::path::config_dir;
 use ts_rs::TS;
 
 #[derive(Serialize, TS, Debug)]
@@ -17,13 +18,13 @@ pub struct CreateConfigResult {
     scheme: String,
 }
 
-pub const SUI_GUI_APP_NAME: &str = "Sui GUI";
+pub const SUI_GUI_APP_IDENTIFIER: &str = "SuiGUI";
 pub const SUI_CLIENT_CONFIG_FILENAME: &str = "suigui_config.yaml";
 pub const SUI_KEYSTORE_FILENAME: &str = "suigui.keystore";
 
 pub fn suigui_config_dir() -> Result<PathBuf> {
-    if let Some(d) = dirs::config_dir() {
-        let suigui_config_dir = d.join(SUI_GUI_APP_NAME);
+    if let Some(c_dir) = config_dir() {
+        let suigui_config_dir = c_dir.join(SUI_GUI_APP_IDENTIFIER);
         if !suigui_config_dir.exists() && fs::create_dir_all(&suigui_config_dir).is_err() {
             return Err(anyhow!("Fail to create config directory"));
         }
