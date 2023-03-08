@@ -47,6 +47,18 @@ pub async fn merge_coins(
 }
 
 #[tauri::command]
+pub async fn merge_coins_and_transfer(
+    coin_type: String,
+    coin_id_list: Vec<String>,
+    receipent: String,
+    gas_coin_id: Option<String>,
+) -> IpcResponse<SuiTransactionResponse> {
+    coin::merge_coins_and_transfer(&coin_type, coin_id_list, &receipent, gas_coin_id)
+        .await
+        .into()
+}
+
+#[tauri::command]
 pub async fn get_coins_by_coin_type(coin_type: String) -> IpcResponse<Vec<SuiCoinResult>> {
     coin::get_coins_by_coin_type(coin_type).await.into()
 }

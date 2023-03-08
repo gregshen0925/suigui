@@ -86,10 +86,7 @@ pub async fn split_and_transfer(
     let coin_id = ObjectID::from_hex_literal(coin_id).or(Err(anyhow!("Invalid object ID")))?;
     let coin_type = TypeTag::from_str(coin_type).or(Err(anyhow!("Invalid coin type")))?;
 
-    let gas_coin_id = match gas_coin_id {
-        Some(s) => Some(ObjectID::from_hex_literal(&s)?),
-        None => None,
-    };
+    let gas_coin_id = parse_gas_coin(gas_coin_id)?;
 
     let (certificate, effects) = call_move(
         package_id,
@@ -141,10 +138,7 @@ pub async fn merge_coins(
 
     let dist_coin_id = coins.pop().unwrap();
 
-    let gas_coin_id = match gas_coin_id {
-        Some(s) => Some(ObjectID::from_hex_literal(&s)?),
-        None => None,
-    };
+    let gas_coin_id = parse_gas_coin(gas_coin_id)?;
 
     let rest_coin_ids = coins
         .into_iter()
@@ -173,4 +167,61 @@ pub async fn merge_coins(
         checkpoint: None,
         parsed_data: None,
     })
+}
+
+pub async fn merge_coins_and_transfer(
+    coin_type: &str,
+    coins: Vec<String>,
+    receipent: &str,
+    gas_coin_id: Option<String>,
+) -> Result<SuiTransactionResponse> {
+    let (mut wallet, _) = config::get_wallet_context().await?;
+
+    let package_id = ObjectID::from_hex_literal("0x2").unwrap();
+    let coins: Vec<SuiJsonValue> = coins
+        .into_iter()
+        .map(|c_str| ObjectID::from_hex_literal(&c_str).or(Err(anyhow!("Invalid object ID"))))
+        .collect::<Result<Vec<ObjectID>>>()?
+        .into_iter()
+        .map(SuiJsonValue::from_object_id)
+        .collect();
+
+    let coin_type = TypeTag::from_str(coin_type).or(Err(anyhow!("Invalid coin type")))?;
+
+    let gas_coin_id = parse_gas_coin(gas_coin_id)?;
+
+    let coins = coins
+        .into_iter()
+        .map(|cid| cid.to_json_value())
+        .collect::<Vec<Value>>();
+
+    let coins = SuiJsonValue::new(Value::from(coins))?;
+
+    let (certificate, effects) = call_move(
+        package_id,
+        "pay",
+        "join_vec_and_transfer",
+        vec![coin_type],
+        gas_coin_id,
+        10000u64,
+        vec![coins, SuiJsonValue::from_str(receipent)?],
+        &mut wallet,
+    )
+    .await
+    .or(Err(anyhow!("Fail to split and transfer")))?;
+
+    Ok(SuiTransactionResponse {
+        certificate,
+        effects,
+        timestamp_ms: None,
+        checkpoint: None,
+        parsed_data: None,
+    })
+}
+
+fn parse_gas_coin(coin_id_str: Option<String>) -> Result<Option<ObjectID>> {
+    match coin_id_str {
+        Some(s) => Ok(Some(ObjectID::from_hex_literal(&s)?)),
+        None => Ok(None),
+    }
 }
