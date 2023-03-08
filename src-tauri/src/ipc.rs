@@ -10,7 +10,7 @@ use anyhow::Result;
 use serde::Serialize;
 use ts_rs::TS;
 
-#[derive(Serialize, TS)]
+#[derive(Serialize, TS, Debug)]
 #[ts(export, export_to = "../src/bindings/")]
 pub struct IpcResponse<Data>
 where

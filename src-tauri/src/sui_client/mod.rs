@@ -28,8 +28,9 @@ pub async fn split_and_transfer(
     coin_id: String,
     amount: u64,
     receipent: String,
+    gas_coin_id: Option<String>,
 ) -> IpcResponse<SuiTransactionResponse> {
-    coin::split_and_transfer(&coin_type, &coin_id, amount, &receipent)
+    coin::split_and_transfer(&coin_type, &coin_id, amount, &receipent, gas_coin_id)
         .await
         .into()
 }
@@ -38,8 +39,11 @@ pub async fn split_and_transfer(
 pub async fn merge_coins(
     coin_type: String,
     coin_id_list: Vec<String>,
+    gas_coin_id: Option<String>,
 ) -> IpcResponse<SuiTransactionResponse> {
-    coin::merge_coins(&coin_type, coin_id_list).await.into()
+    coin::merge_coins(&coin_type, coin_id_list, gas_coin_id)
+        .await
+        .into()
 }
 
 #[tauri::command]

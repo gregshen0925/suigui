@@ -78,6 +78,7 @@ pub async fn split_and_transfer(
     coin_id: &str,
     amount: u64,
     receipent: &str,
+    gas_coin_id: Option<String>,
 ) -> Result<SuiTransactionResponse> {
     let (mut wallet, _) = config::get_wallet_context().await?;
 
@@ -85,12 +86,17 @@ pub async fn split_and_transfer(
     let coin_id = ObjectID::from_hex_literal(coin_id).or(Err(anyhow!("Invalid object ID")))?;
     let coin_type = TypeTag::from_str(coin_type).or(Err(anyhow!("Invalid coin type")))?;
 
+    let gas_coin_id = match gas_coin_id {
+        Some(s) => Some(ObjectID::from_hex_literal(&s)?),
+        None => None,
+    };
+
     let (certificate, effects) = call_move(
         package_id,
         "pay",
         "split_and_transfer",
         vec![coin_type],
-        None,
+        gas_coin_id,
         500u64,
         vec![
             SuiJsonValue::from_object_id(coin_id),
@@ -111,7 +117,11 @@ pub async fn split_and_transfer(
     })
 }
 
-pub async fn merge_coins(coin_type: &str, coins: Vec<String>) -> Result<SuiTransactionResponse> {
+pub async fn merge_coins(
+    coin_type: &str,
+    coins: Vec<String>,
+    gas_coin_id: Option<String>,
+) -> Result<SuiTransactionResponse> {
     let (mut wallet, _) = config::get_wallet_context().await?;
 
     if coins.len() < 2 {
@@ -131,6 +141,11 @@ pub async fn merge_coins(coin_type: &str, coins: Vec<String>) -> Result<SuiTrans
 
     let dist_coin_id = coins.pop().unwrap();
 
+    let gas_coin_id = match gas_coin_id {
+        Some(s) => Some(ObjectID::from_hex_literal(&s)?),
+        None => None,
+    };
+
     let rest_coin_ids = coins
         .into_iter()
         .map(|cid| cid.to_json_value())
@@ -143,7 +158,7 @@ pub async fn merge_coins(coin_type: &str, coins: Vec<String>) -> Result<SuiTrans
         "pay",
         "join_vec",
         vec![coin_type],
-        None,
+        gas_coin_id,
         10000u64,
         vec![dist_coin_id, rest_coin_ids],
         &mut wallet,
