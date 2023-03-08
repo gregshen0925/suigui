@@ -7,7 +7,7 @@ import { createNewKey } from "../../utils/createNewKey";
 export function useCreateKey() {
   const [createNewAddress, setCreateNewAddress] = useState<boolean>(false);
   const [seedPhrase, setSeedPhrase] = useState<string[]>([]);
-  const { data, refetch: getNewKey } = useQuery({
+  const { refetch: getNewKey } = useQuery({
     queryKey: ["createNewKey"],
     queryFn: createNewKey,
     enabled: false,

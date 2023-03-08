@@ -59,7 +59,8 @@
         "height": 900,
         "resizable": true,
         "title": "Sui GUI",
-        "width": 1200
+        "width": 1200,
+        "fileDropEnabled": false
       }
     ]
   }

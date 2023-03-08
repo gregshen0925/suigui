@@ -1,11 +1,11 @@
 import { type NextPage } from "next";
 import dynamic from "next/dynamic";
 import React from "react";
-import Tabs from "../../components/Dashboard/Tabs";
-
-type Props = {};
 
 const Assets = dynamic(() => import("../../components/Dashboard/Assets"), {
+  ssr: false,
+});
+const Tabs = dynamic(() => import("../../components/Dashboard/Tabs"), {
   ssr: false,
 });
 

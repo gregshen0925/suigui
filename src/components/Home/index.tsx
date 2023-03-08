@@ -8,23 +8,22 @@ import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
   const [name, setName] = useState<string>("");
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-  };
-  const router = useRouter();
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setName(e.target.value);
+  // };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!name.trimStart()) {
-      toast.error("Please enter your name");
-      return;
-    }
-    const greet = async () => {
-      const result = await invoke("greet", { name });
-      toast.success(result as string);
-    };
-    greet();
-  };
+  // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   if (!name.trimStart()) {
+  //     toast.error("Please enter your name");
+  //     return;
+  //   }
+  //   const greet = async () => {
+  //     const result = await invoke("greet", { name });
+  //     toast.success(result as string);
+  //   };
+  //   greet();
+  // };
 
   return (
     <div className="bg-black">

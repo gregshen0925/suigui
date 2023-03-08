@@ -3,7 +3,7 @@ export type Links = {
   url: string;
 };
 
-export type Object = {
-  ObjectId: string;
-  balance: number;
+export type Contact = {
+  name: string;
+  address: string;
 };

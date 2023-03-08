@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
-import { type SuiCoinResult } from "../../bindings";
-import { getCoinsByType } from "../../utils/getCoinsByType";
+import { type SuiCoinResult } from "../../../bindings";
+import { useDragAndDrop } from "../../../hooks/useDragAndDrop";
+import { getCoinsByType } from "../../../utils/getCoinsByType";
 
 type Props = {
   selectedCoin: string;
@@ -9,41 +10,10 @@ type Props = {
 
 const Objects = ({ selectedCoin }: Props) => {
   const [objects, setObjects] = useState<SuiCoinResult[]>([]);
-  const handleOnDrag = (
-    e: React.DragEvent<HTMLDivElement>,
-    objectId: string
-  ) => {
-    e.dataTransfer.setData("objectId", objectId);
-    console.log("ObjectId", objectId);
-    // setObjects(objects.filter((object) => object.ObjectId !== objectId));
-  };
-  const handleOnDropToMerge = (e: React.DragEvent<HTMLDivElement>) => {
-    const objectId = e.dataTransfer.getData("objectId");
-    console.log("ObjectId", objectId);
-    // setCoinsToMerge([...coinsToMerge, objectId]);
-    // setObjects(objects.filter((object) => object.coinObjectId !== objectId));
-  };
-  const handleOnDropToSend = (e: React.DragEvent<HTMLDivElement>) => {
-    const objectId = e.dataTransfer.getData("objectId");
-    console.log("ObjectId", objectId);
-    // setGasObject(objectId);
-    // setObjects(objects.filter((object) => object.coinObjectId !== objectId));
-  };
-  //   const handleOnDropGas = (e: React.DragEvent<HTMLDivElement>) => {
-  //     const objectId = e.dataTransfer.getData("objectId");
-  //     console.log("objectId", objectId);
-  //     setGasObject(objectId);
-  //     setObjects(objects.filter((object) => object.coinObjectId !== objectId));
-  //   };
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
+  const { handleOnDrag, enableDropping, handleOnDropToMerge } =
+    useDragAndDrop();
 
-  const {
-    refetch: refetchCoins,
-    isLoading,
-    isFetching,
-  } = useQuery({
+  const { isLoading, isFetching } = useQuery({
     queryKey: ["getCoinsByType"],
     queryFn: () => getCoinsByType(selectedCoin),
     onSuccess: (data) => {
@@ -88,10 +58,12 @@ const Objects = ({ selectedCoin }: Props) => {
             {objects?.map((object, index) => (
               <div
                 key={index}
-                // onDrop={handleOnDropToMerge}
-                // onDragOver={handleDragOver}
+                onDrop={handleOnDropToMerge}
+                onDragOver={enableDropping}
                 draggable
-                onDragStart={(e) => handleOnDrag(e, object.coin_id)}
+                onDragStart={(e) =>
+                  handleOnDrag(e, object.coin_id, object.balance)
+                }
                 className="m-2 w-[130px] h-[130px] rounded-full bg-white/30 text-white flex flex-col justify-center items-center"
               >
                 <div className="absolute w-[130px] h-[130px] z-[1] m-2 rounded-full" />
