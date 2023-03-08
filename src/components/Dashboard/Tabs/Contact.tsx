@@ -22,7 +22,7 @@ const Contact = () => {
           <div
             key={index}
             onDragOver={enableDropping}
-            onDrop={handleOnDropToSend}
+            onDrop={(e) => handleOnDropToSend(e, contact.address)}
           >
             <button className="w-full h-[80px] rounded-xl bg-white/20 hover:bg-white/50">
               <div className="flex flex-col items-center">

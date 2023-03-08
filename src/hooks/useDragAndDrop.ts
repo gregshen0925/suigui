@@ -37,7 +37,10 @@ export const useDragAndDrop = () => {
     // setCoinsToMerge([...coinsToMerge, objectId]);
     // setObjects(objects.filter((object) => object.coinObjectId !== objectId));
   };
-  const handleOnDropToSend = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleOnDropToSend = (
+    e: React.DragEvent<HTMLDivElement>,
+    contact: string
+  ) => {
     const objectId = e.dataTransfer.getData("objectId");
     console.log("ObjectId", objectId);
     toast.success("Sent");

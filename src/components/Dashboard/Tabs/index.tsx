@@ -24,8 +24,8 @@ const Tabs = (props: Props) => {
                     onClick={() => setSelectedTab(tab)}
                     className={`w-full py-3 ${
                       selectedTab == tab
-                        ? "bg-black text-white lg:text-lg text-md"
-                        : "bg-gray-800 text-gray-400 text-sm lg:text-md hover:bg-gray-700 hover:text-gray-300"
+                        ? "bg-black text-white lg:text-md text-sm"
+                        : "bg-gray-800 text-gray-400 text-xs lg:text-sm hover:bg-gray-700 hover:text-gray-300"
                     }  rounded-t-xl font-bold transition duration-200`}
                   >
                     {tab}
