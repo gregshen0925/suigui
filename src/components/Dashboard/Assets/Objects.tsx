@@ -1,3 +1,4 @@
+import { motion, useDragControls } from "framer-motion";
 import { useGetCoinsByType } from "../../../hooks/sui/useGetCoinsByType";
 import { useDragAndDrop } from "../../../hooks/useDragAndDrop";
 
@@ -5,7 +6,17 @@ const Objects = () => {
   const { selectedCoin, handleOnDrag, enableDropping, handleOnDropToMerge } =
     useDragAndDrop();
 
-  const { objects, isFetching, isLoading } = useGetCoinsByType(selectedCoin);
+  //! ignore for test
+  // const { objects, isFetching, isLoading } = useGetCoinsByType( selectedCoin );
+  const isFetching = false;
+  const isLoading = false;
+  const objects = [
+    {
+      coin_type: "testType",
+      coin_id: "testId",
+      balance: 1000000000000000000,
+    },
+  ];
 
   return (
     <div className="">
@@ -35,27 +46,39 @@ const Objects = () => {
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
             {objects?.map((object, index) => (
-              <div
-                key={index}
-                onDrop={(e) => handleOnDropToMerge(e, object.coin_id)}
-                onDragOver={enableDropping}
-                draggable
-                onDragStart={(e) =>
-                  handleOnDrag(e, object.coin_id, object.balance)
-                }
-                className="m-2 w-[130px] h-[130px] rounded-full bg-white/30 text-white flex flex-col justify-center items-center"
-              >
-                <div className="absolute w-[130px] h-[130px] z-[1] m-2 rounded-full" />
-                <div className=" text-center font-bold text-white">
-                  <div className="">
-                    {" "}
-                    {object.coin_id.slice(0, 4) +
-                      "..." +
-                      object.coin_id.slice(-4)}
+              <>
+                <motion.div
+                  draggable
+                  onDrop={(e) => handleOnDropToMerge(e, object.coin_id)}
+                  onDragOver={enableDropping}
+                  onDragStart={(e) =>
+                    handleOnDrag(object.coin_id, object.balance)
+                  }
+                  drag
+                  dragConstraints={{
+                    left: -5000,
+                    right: 5000,
+                    top: -5000,
+                    bottom: 5000,
+                  }}
+                  dragElastic={0.5}
+                  dragMomentum={false}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="m-2 w-[130px] h-[130px] rounded-full bg-white/30 text-white flex flex-col justify-center items-center"
+                >
+                  <div className="absolute w-[130px] h-[130px] z-[1] m-2 rounded-full" />
+                  <div className=" text-center font-bold text-white">
+                    <div className="">
+                      {" "}
+                      {object.coin_id.slice(0, 4) +
+                        "..." +
+                        object.coin_id.slice(-4)}
+                    </div>
+                    <div className="">{Number(object.balance) / 10 ** 9}</div>
                   </div>
-                  <div className="">{Number(object.balance) / 10 ** 9}</div>
-                </div>
-              </div>
+                </motion.div>
+              </>
             ))}
           </div>
         )}

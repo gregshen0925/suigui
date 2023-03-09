@@ -22,8 +22,8 @@ const Assets = () => {
             <div className="text-white">Gas</div>
             <div
               className="w-[130px] h-[130px] border"
-              onDrop={handleOnDropGas}
-              onDragOver={enableDropping}
+              onDrop={(e) => handleOnDropGas(e)}
+              // onDragOver={enableDropping}
             >
               <div className="flex items-center justify-center">
                 <div className="m-2 w-[110px] h-[110px] rounded-full bg-white/30 text-white flex flex-col justify-center items-center">
