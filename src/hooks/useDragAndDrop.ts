@@ -25,6 +25,7 @@ export const useDragAndDrop = () => {
     e.dataTransfer.setData("objectId", objectId);
     e.dataTransfer.setData("balance", `${balance}`);
     console.log("ObjectId", objectId, balance);
+    console.log(objects);
   };
   const handleOnDropGas = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -33,6 +34,7 @@ export const useDragAndDrop = () => {
     setGasObject({ coin_id: objectId, balance: Number(balance) });
     toast.success(`Set ${objectId.slice(0, 4)}...${objectId.slice(-4)} as Gas`);
     setObjects(objects.filter((object) => object.coin_id !== objectId));
+    console.log(objects);
   };
 
   const handleOnDropToMerge = (
@@ -42,6 +44,7 @@ export const useDragAndDrop = () => {
     e.preventDefault();
     const coinToMerge = e.dataTransfer.getData("objectId");
     console.log("ObjectId", coinToMerge);
+    if (coinToMerge === mergeTo) return;
     mergeCoins(selectedCoin, [mergeTo, coinToMerge], gasObject.coin_id);
     toast.success(
       `Merged ${coinToMerge.slice(0, 4)}...${coinToMerge.slice(
