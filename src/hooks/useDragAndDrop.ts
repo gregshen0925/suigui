@@ -39,7 +39,11 @@ export const useDragAndDrop = () => {
     const coinToMerge = e.dataTransfer.getData("objectId");
     console.log("ObjectId", coinToMerge);
     mergeCoins(selectedCoin, [mergeTo, coinToMerge], gasObject.coin_id);
-    toast.success("Merged");
+    toast.success(
+      `Merged ${coinToMerge.slice(0, 4)}...${coinToMerge.slice(
+        -4
+      )} to ${mergeTo.slice(0, 4)}...${mergeTo.slice(-4)}`
+    );
     // setObjects(objects.filter((object) => object.coinObjectId !== objectId));
   };
   const handleOnDropToSend = (
