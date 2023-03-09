@@ -220,8 +220,7 @@ pub async fn merge_coins_and_transfer(
 }
 
 fn parse_gas_coin(coin_id_str: Option<String>) -> Result<Option<ObjectID>> {
-    match coin_id_str {
-        Some(s) => Ok(Some(ObjectID::from_hex_literal(&s)?)),
-        None => Ok(None),
-    }
+    coin_id_str
+        .map(|s| ObjectID::from_hex_literal(&s).or(Err(anyhow!("Invalid object ID"))))
+        .transpose()
 }
