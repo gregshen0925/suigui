@@ -1,15 +1,13 @@
 import React from "react";
 import Contact from "./Contact";
 
-type Props = {};
-
 enum Tab {
   CONTACT = "Contact",
   NFT = "NFT Projects",
   DEFI = "DeFi Protocols",
 }
 
-const Tabs = (props: Props) => {
+const Tabs = () => {
   const [selectedTab, setSelectedTab] = React.useState<Tab>(Tab.CONTACT);
   return (
     <div className="w-full rounded-xl bg-gradient-to-b from-black to-white p-[1px]">

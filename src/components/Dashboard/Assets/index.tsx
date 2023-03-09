@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import { useDragAndDrop } from "../../../hooks/useDragAndDrop";
 import Objects from "./Objects";
 import SelectButton from "./SelectButton";
@@ -12,7 +10,7 @@ const Assets = () => {
       <div className="h-[80vh] w-full flex-col p-5 rounded-xl bg-gradient-to-b from-slate-800 to-black">
         {/* Header */}
         <div className="grid  grid-cols-2 lg:grid-cols-3 items-center">
-          <div className="col-span-1 flex justify-center">
+          <div className="col-span-1 flex justify-center items-center">
             <SelectButton />
           </div>
           <div className="font-mono font-bold text-xl lg:text-3xl col-span-1 text-center text-white">

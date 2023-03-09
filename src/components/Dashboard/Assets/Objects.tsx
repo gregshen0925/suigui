@@ -1,15 +1,28 @@
 import { useGetCoinsByType } from "../../../hooks/sui/useGetCoinsByType";
+import { useSelectedCoin } from "../../../hooks/sui/useSelectedCoin";
 import { useDragAndDrop } from "../../../hooks/useDragAndDrop";
+import { motion } from "framer-motion";
 
 const Objects = () => {
-  const { selectedCoin, handleOnDrag, enableDropping, handleOnDropToMerge } =
+  const { selectedCoin } = useSelectedCoin();
+  const { handleOnDrag, enableDropping, handleOnDropToMerge } =
     useDragAndDrop();
 
-  const { objects, isFetching, isLoading } = useGetCoinsByType(selectedCoin);
+  const { objects, isFetching, isLoading, refetch } =
+    useGetCoinsByType(selectedCoin);
 
   return (
     <div className="">
       <div className="pt-5 px-2">
+        <div className="flex justify-center pb-5">
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            onClick={() => refetch()}
+            className="bg-black rounded-xl w-[100px] h-[50px] text-white font-bold"
+          >
+            Refetch
+          </motion.button>
+        </div>
         {isLoading || isFetching ? (
           <div className="flex justify-center pt-10">
             <div role="status ">

@@ -1,12 +1,12 @@
-import React, { type Dispatch, type SetStateAction } from "react";
+import React from "react";
 import { useGetCoinTypes } from "../../../hooks/sui/useGetCoinTypes";
-import { useDragAndDrop } from "../../../hooks/useDragAndDrop";
+import { useSelectedCoin } from "../../../hooks/sui/useSelectedCoin";
 
 type Props = {};
 
 const SelectButton = () => {
   const { coinTypes, isLoading, isFetching } = useGetCoinTypes();
-  const { selectedCoin, setSelectedCoin } = useDragAndDrop();
+  const { selectedCoin, setSelectedCoin } = useSelectedCoin();
 
   return (
     <div className="flex z-[1] p-5 items-center">

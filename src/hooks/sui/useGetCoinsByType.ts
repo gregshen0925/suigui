@@ -5,7 +5,7 @@ import { getCoinsByType } from "../../utils/getCoinsByType";
 
 export function useGetCoinsByType(selectedCoin: string) {
   const [objects, setObjects] = useState<SuiCoinResult[]>([]);
-  const { isLoading, isFetching } = useQuery({
+  const { isLoading, isFetching, refetch } = useQuery({
     queryKey: ["getCoinsByType"],
     queryFn: () => getCoinsByType(selectedCoin),
     onSuccess: (data) => {
@@ -20,5 +20,5 @@ export function useGetCoinsByType(selectedCoin: string) {
     },
   });
 
-  return { objects, isLoading, isFetching };
+  return { objects, setObjects, isLoading, isFetching, refetch };
 }

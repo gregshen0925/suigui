@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { mergeCoins } from "../utils/mergeCoins";
+import { useGetCoinsByType } from "./sui/useGetCoinsByType";
+import { useSelectedCoin } from "./sui/useSelectedCoin";
 
 type GasObject = {
   coin_id: string;
@@ -8,7 +10,8 @@ type GasObject = {
 };
 
 export const useDragAndDrop = () => {
-  const [selectedCoin, setSelectedCoin] = useState<string>("0x2::sui::SUI");
+  const { selectedCoin, setSelectedCoin } = useSelectedCoin();
+  const { objects, setObjects } = useGetCoinsByType(selectedCoin);
   const [gasObject, setGasObject] = useState<GasObject>({
     coin_id: "",
     balance: 0,
@@ -24,18 +27,19 @@ export const useDragAndDrop = () => {
     console.log("ObjectId", objectId, balance);
   };
   const handleOnDropGas = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
     const objectId = e.dataTransfer.getData("objectId");
     const balance = e.dataTransfer.getData("balance");
-    console.log("objectId", objectId);
     setGasObject({ coin_id: objectId, balance: Number(balance) });
     toast.success(`Set ${objectId.slice(0, 4)}...${objectId.slice(-4)} as Gas`);
-    // setObjects(objects.filter((object) => object.coin_id !== objectId));
+    setObjects(objects.filter((object) => object.coin_id !== objectId));
   };
 
   const handleOnDropToMerge = (
     e: React.DragEvent<HTMLDivElement>,
     mergeTo: string
   ) => {
+    e.preventDefault();
     const coinToMerge = e.dataTransfer.getData("objectId");
     console.log("ObjectId", coinToMerge);
     mergeCoins(selectedCoin, [mergeTo, coinToMerge], gasObject.coin_id);
@@ -50,6 +54,7 @@ export const useDragAndDrop = () => {
     e: React.DragEvent<HTMLDivElement>,
     contact: string
   ) => {
+    e.preventDefault();
     const objectId = e.dataTransfer.getData("objectId");
     console.log("ObjectId", objectId);
     toast.success("Sent");
@@ -67,7 +72,6 @@ export const useDragAndDrop = () => {
     handleOnDropToMerge,
     handleOnDropToSend,
     enableDropping,
-    selectedCoin,
     setSelectedCoin,
   };
 };
