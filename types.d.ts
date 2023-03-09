@@ -7,3 +7,7 @@ export type Contact = {
   name: string;
   address: string;
 };
+export type Object = {
+  address: string;
+  balance: number;
+};

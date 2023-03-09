@@ -1,32 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
-import { type SuiCoinResult } from "../../../bindings";
+import { useGetCoinsByType } from "../../../hooks/sui/useGetCoinsByType";
 import { useDragAndDrop } from "../../../hooks/useDragAndDrop";
-import { getCoinsByType } from "../../../utils/getCoinsByType";
 
-type Props = {
-  selectedCoin: string;
-};
-
-const Objects = ({ selectedCoin }: Props) => {
-  const [objects, setObjects] = useState<SuiCoinResult[]>([]);
-  const { handleOnDrag, enableDropping, handleOnDropToMerge } =
+const Objects = () => {
+  const { selectedCoin, handleOnDrag, enableDropping, handleOnDropToMerge } =
     useDragAndDrop();
 
-  const { isLoading, isFetching } = useQuery({
-    queryKey: ["getCoinsByType"],
-    queryFn: () => getCoinsByType(selectedCoin),
-    onSuccess: (data) => {
-      const { error, result } = data;
-      if (result) {
-        setObjects(result);
-        console.log(result);
-        if (error) {
-          console.log(error);
-        }
-      }
-    },
-  });
+  const { objects, isFetching, isLoading } = useGetCoinsByType(selectedCoin);
 
   return (
     <div className="">
@@ -58,7 +37,7 @@ const Objects = ({ selectedCoin }: Props) => {
             {objects?.map((object, index) => (
               <div
                 key={index}
-                onDrop={handleOnDropToMerge}
+                onDrop={(e) => handleOnDropToMerge(e, object.coin_id)}
                 onDragOver={enableDropping}
                 draggable
                 onDragStart={(e) =>

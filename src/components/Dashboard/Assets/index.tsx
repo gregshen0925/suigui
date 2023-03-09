@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-floating-promises */
-import { useState } from "react";
 import { useDragAndDrop } from "../../../hooks/useDragAndDrop";
 import Objects from "./Objects";
 import SelectButton from "./SelectButton";
 
 const Assets = () => {
-  const [selectedCoin, setSelectedCoin] = useState<string>("0x2::sui::SUI");
   const { handleOnDropGas, enableDropping, gasObject } = useDragAndDrop();
 
   return (
@@ -15,10 +13,7 @@ const Assets = () => {
         {/* Header */}
         <div className="grid  grid-cols-2 lg:grid-cols-3 items-center">
           <div className="col-span-1 flex justify-center">
-            <SelectButton
-              setSelectedCoin={setSelectedCoin}
-              selectedCoin={selectedCoin}
-            />
+            <SelectButton />
           </div>
           <div className="font-mono font-bold text-xl lg:text-3xl col-span-1 text-center text-white">
             <div>Assets</div>
@@ -35,7 +30,7 @@ const Assets = () => {
                   <div className="absolute w-[110px] h-[110px] z-[1] m-2 rounded-full" />
                   <div className="text-xs text-center font-bold text-white">
                     <div className="">
-                      {gasObject?.coin_id == "Not Set"
+                      {gasObject?.coin_id == ""
                         ? "Not Set"
                         : gasObject?.coin_id.slice(0, 4) +
                           "..." +
@@ -54,7 +49,7 @@ const Assets = () => {
         </div>
 
         {/* Display Objects */}
-        <Objects selectedCoin={selectedCoin} />
+        <Objects />
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+import { mergeCoins } from "../utils/mergeCoins";
 
 type GasObject = {
   coin_id: string;
@@ -7,8 +8,9 @@ type GasObject = {
 };
 
 export const useDragAndDrop = () => {
+  const [selectedCoin, setSelectedCoin] = useState<string>("0x2::sui::SUI");
   const [gasObject, setGasObject] = useState<GasObject>({
-    coin_id: "Not Set",
+    coin_id: "",
     balance: 0,
   });
 
@@ -30,11 +32,14 @@ export const useDragAndDrop = () => {
     // setObjects(objects.filter((object) => object.coin_id !== objectId));
   };
 
-  const handleOnDropToMerge = (e: React.DragEvent<HTMLDivElement>) => {
-    const objectId = e.dataTransfer.getData("objectId");
-    console.log("ObjectId", objectId);
+  const handleOnDropToMerge = (
+    e: React.DragEvent<HTMLDivElement>,
+    mergeTo: string
+  ) => {
+    const coinToMerge = e.dataTransfer.getData("objectId");
+    console.log("ObjectId", coinToMerge);
+    mergeCoins(selectedCoin, [mergeTo, coinToMerge], gasObject.coin_id);
     toast.success("Merged");
-    // setCoinsToMerge([...coinsToMerge, objectId]);
     // setObjects(objects.filter((object) => object.coinObjectId !== objectId));
   };
   const handleOnDropToSend = (
@@ -58,5 +63,7 @@ export const useDragAndDrop = () => {
     handleOnDropToMerge,
     handleOnDropToSend,
     enableDropping,
+    selectedCoin,
+    setSelectedCoin,
   };
 };
