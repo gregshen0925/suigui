@@ -33,7 +33,9 @@ export const useDragAndDrop = () => {
     const balance = e.dataTransfer.getData("balance");
     setGasObject({ coin_id: objectId, balance: Number(balance) });
     toast.success(`Set ${objectId.slice(0, 4)}...${objectId.slice(-4)} as Gas`);
-    setObjects(objects.filter((object) => object.coin_id !== objectId));
+    setObjects(
+      objects.filter((object) => object.coin_id !== gasObject.coin_id)
+    );
     console.log(objects);
   };
 

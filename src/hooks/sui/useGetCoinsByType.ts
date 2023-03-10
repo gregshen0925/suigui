@@ -14,12 +14,12 @@ export function useGetCoinsByType(selectedCoin: string) {
     queryFn: () => getCoinsByType(selectedCoin),
     onSuccess: (data) => {
       const { error, result } = data;
+      if (error) {
+        console.log(error);
+      }
       if (result) {
         setObjects(result);
         console.log(result);
-        if (error) {
-          console.log(error);
-        }
       }
     },
   });
