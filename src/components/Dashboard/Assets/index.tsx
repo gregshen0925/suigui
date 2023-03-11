@@ -1,11 +1,26 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-floating-promises */
-import { useDragAndDrop } from "../../../hooks/useDragAndDrop";
+import { motion } from "framer-motion";
 import Objects from "./Objects";
 import SelectButton from "./SelectButton";
+import { useDrop } from "react-dnd";
+import { useState } from "react";
+import { ObjectProps } from "./Object";
+import { ItemTypes, ObjectContext } from "../../../contexts/ObjectContext";
+import useDnd from "../../../hooks/useDnd";
 
 const Assets = () => {
-  const { handleOnDropGas, enableDropping, gasObject } = useDragAndDrop();
+  const { gasObject, handleOnDropGas } = useDnd();
+  const [{ isOver }, drop] = useDrop(
+    () => ({
+      accept: ItemTypes.OBJECT,
+      drop: (item: ObjectProps) => handleOnDropGas(item),
+      collect: (monitor) => ({
+        isOver: !!monitor.isOver(),
+      }),
+    }),
+    []
+  );
 
   return (
     <div className="w-full rounded-xl bg-gradient-to-b from-black to-white p-[1px]">
@@ -21,9 +36,9 @@ const Assets = () => {
           <div className="col-span-1 flex flex-col items-center">
             <div className="text-white">Gas</div>
             <div
+              ref={drop}
+              style={isOver ? { border: "2px solid red" } : {}}
               className="w-[130px] h-[130px] border"
-              onDrop={(e) => handleOnDropGas(e)}
-              // onDragOver={enableDropping}
             >
               <div className="flex items-center justify-center">
                 <div className="m-2 w-[110px] h-[110px] rounded-full bg-white/30 text-white flex flex-col justify-center items-center">
