@@ -3,7 +3,14 @@ import Objects from "./Objects";
 import SelectButton from "./SelectButton";
 
 const Assets = () => {
-  const { handleOnDropGas, enableDropping, gasObject } = useDragAndDrop();
+  const {
+    handleOnDropGas,
+    handleDragOver,
+    gasObject,
+    isDragOver,
+    handleOnDragLeave,
+    handleOnDragEnd,
+  } = useDragAndDrop();
 
   return (
     <div className="w-full rounded-xl bg-gradient-to-b from-black to-white p-[1px]">
@@ -19,9 +26,13 @@ const Assets = () => {
           <div className="col-span-1 flex flex-col items-center">
             <div className="text-white">Gas</div>
             <div
-              className="w-[130px] h-[130px] border"
+              className={`w-[130px] h-[130px] border ${
+                isDragOver ? "border-[2px] border-green-600" : ""
+              }`}
               onDrop={handleOnDropGas}
-              onDragOver={enableDropping}
+              onDragOver={handleDragOver}
+              onDragLeave={handleOnDragLeave}
+              onDragEnd={handleOnDragEnd}
             >
               <div className="flex items-center justify-center">
                 <div className="m-2 w-[110px] h-[110px] rounded-full bg-white/30 text-white flex flex-col justify-center items-center">

@@ -2,11 +2,18 @@ import { useGetCoinsByType } from "../../../hooks/sui/useGetCoinsByType";
 import { useSelectedCoin } from "../../../hooks/sui/useSelectedCoin";
 import { useDragAndDrop } from "../../../hooks/useDragAndDrop";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 const Objects = () => {
   const { selectedCoin } = useSelectedCoin();
-  const { handleOnDrag, enableDropping, handleOnDropToMerge } =
-    useDragAndDrop();
+  const {
+    handleOnDrag,
+    handleDragOver,
+    handleOnDropToMerge,
+    isDragged,
+    setIsDragged,
+    handleOnDragEnd,
+  } = useDragAndDrop();
 
   const { objects, isFetching, isLoading, refetch } =
     useGetCoinsByType(selectedCoin);
@@ -51,12 +58,15 @@ const Objects = () => {
               <div
                 key={index}
                 onDrop={(e) => handleOnDropToMerge(e, object.coin_id)}
-                onDragOver={enableDropping}
+                onDragOver={handleDragOver}
+                onDragEnd={handleOnDragEnd}
                 draggable
                 onDragStart={(e) =>
                   handleOnDrag(e, object.coin_id, object.balance)
                 }
-                className="m-2 w-[130px] h-[130px] rounded-full bg-white/30 text-white flex flex-col justify-center items-center"
+                className={`${
+                  isDragged == object.coin_id ? "bg-black" : "bg-white/30"
+                } m-2 w-[130px] h-[130px] rounded-full  text-white flex flex-col justify-center items-center`}
               >
                 <div className="absolute w-[130px] h-[130px] z-[1] m-2 rounded-full" />
                 <div className=" text-center font-bold text-white">

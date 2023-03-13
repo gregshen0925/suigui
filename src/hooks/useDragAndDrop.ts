@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { mergeCoins } from "../utils/mergeCoins";
 import { useGetCoinsByType } from "./sui/useGetCoinsByType";
@@ -12,6 +12,8 @@ type GasObject = {
 export const useDragAndDrop = () => {
   const { selectedCoin, setSelectedCoin } = useSelectedCoin();
   const { objects, setObjects } = useGetCoinsByType(selectedCoin);
+  const [isDragged, setIsDragged] = useState<string>("");
+  const [isDragOver, setIsDragOver] = useState<boolean>(false);
   const [gasObject, setGasObject] = useState<GasObject>({
     coin_id: "",
     balance: 0,
@@ -24,8 +26,14 @@ export const useDragAndDrop = () => {
   ) => {
     e.dataTransfer.setData("objectId", objectId);
     e.dataTransfer.setData("balance", `${balance}`);
-    console.log("ObjectId", objectId, balance);
-    console.log(objects);
+    setIsDragged(objectId);
+  };
+  const handleOnDragEnd = () => {
+    setIsDragged("");
+    setIsDragOver(false);
+  };
+  const handleOnDragLeave = () => {
+    setIsDragOver(false);
   };
   const handleOnDropGas = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -36,6 +44,7 @@ export const useDragAndDrop = () => {
     setObjects(
       objects.filter((object) => object.coin_id !== gasObject.coin_id)
     );
+    setIsDragOver(false);
     console.log(objects);
   };
 
@@ -67,8 +76,9 @@ export const useDragAndDrop = () => {
     // setObjects(objects.filter((object) => object.coinObjectId !== objectId));
   };
 
-  const enableDropping = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    setIsDragOver(true);
   };
   return {
     gasObject,
@@ -76,7 +86,12 @@ export const useDragAndDrop = () => {
     handleOnDropGas,
     handleOnDropToMerge,
     handleOnDropToSend,
-    enableDropping,
+    handleDragOver,
     setSelectedCoin,
+    isDragged,
+    setIsDragged,
+    handleOnDragEnd,
+    isDragOver,
+    handleOnDragLeave,
   };
 };
