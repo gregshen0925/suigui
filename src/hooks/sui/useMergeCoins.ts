@@ -3,13 +3,13 @@ import { toast } from "react-hot-toast";
 import { mergeCoins } from "../../utils/mergeCoins";
 
 export function useMergeCoins(
-  coin_type: string,
+  coinType: string,
   coins: string[],
-  gas_coin_id: string | null
+  gasCoinId: string | null
 ) {
   const { data } = useQuery({
     queryKey: ["mergeCoins"],
-    queryFn: () => mergeCoins(coin_type, coins, gas_coin_id),
+    queryFn: () => mergeCoins(coinType, coins, gasCoinId),
     onSuccess: (data) => {
       //   const { error, result } = data;
       //   if (result) {
