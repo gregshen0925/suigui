@@ -1,11 +1,7 @@
-import { useGetCoinsByType } from "../../../hooks/sui/useGetCoinsByType";
-import { useSelectedCoin } from "../../../hooks/sui/useSelectedCoin";
 import { useDragAndDrop } from "../../../hooks/useDragAndDrop";
 import { motion } from "framer-motion";
-import { useEffect } from "react";
 
 const Objects = () => {
-  const { selectedCoin } = useSelectedCoin();
   const {
     handleOnDrag,
     handleDragOver,
@@ -13,10 +9,11 @@ const Objects = () => {
     isDragged,
     setIsDragged,
     handleOnDragEnd,
+    loadingCoins,
+    fetchingCoins,
+    refetchCoins,
+    objects,
   } = useDragAndDrop();
-
-  const { objects, isFetching, isLoading, refetch } =
-    useGetCoinsByType(selectedCoin);
 
   return (
     <div className="">
@@ -24,15 +21,15 @@ const Objects = () => {
         <div className="flex justify-center pb-5">
           <motion.button
             whileTap={{ scale: 0.9 }}
-            onClick={() => refetch()}
+            onClick={() => refetchCoins()}
             className="bg-black rounded-xl w-[100px] h-[50px] text-white font-bold"
           >
             Refetch
           </motion.button>
         </div>
-        {isLoading || isFetching ? (
+        {loadingCoins || fetchingCoins ? (
           <div className="flex justify-center pt-10">
-            <div role="status ">
+            <div role="status">
               <svg
                 aria-hidden="true"
                 className="inline w-10 h-10 mr-2 text-blue-600 animate-spin fill-white"

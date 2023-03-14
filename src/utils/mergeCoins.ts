@@ -10,5 +10,6 @@ export const mergeCoins = async (
     coinIdList: coins,
     gasCoinId: gasCoinId,
   });
+  console.log(data);
   return { data };
 };

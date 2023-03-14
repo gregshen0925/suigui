@@ -9,7 +9,12 @@ export function useGetCoinsByType(selectedCoin: string) {
     { coin_type: "222", coin_id: "222", balance: 222 },
     { coin_type: "333", coin_id: "333", balance: 333 },
   ]);
-  const { isLoading, isFetching, refetch } = useQuery({
+  const {
+    isLoading: loadingCoins,
+    isFetching: fetchingCoins,
+    refetch: refetchCoins,
+    isSuccess,
+  } = useQuery({
     queryKey: ["getCoinsByType"],
     queryFn: () => getCoinsByType(selectedCoin),
     onSuccess: (data) => {
@@ -19,10 +24,16 @@ export function useGetCoinsByType(selectedCoin: string) {
       }
       if (result) {
         setObjects(result);
-        console.log(result);
       }
     },
   });
 
-  return { objects, setObjects, isLoading, isFetching, refetch };
+  return {
+    objects,
+    setObjects,
+    loadingCoins,
+    fetchingCoins,
+    refetchCoins,
+    isSuccess,
+  };
 }

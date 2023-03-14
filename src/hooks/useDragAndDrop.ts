@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { type SuiCoinResult } from "../bindings";
 import { mergeCoins } from "../utils/mergeCoins";
 import { useGetCoinsByType } from "./sui/useGetCoinsByType";
 import { useSelectedCoin } from "./sui/useSelectedCoin";
@@ -11,19 +12,20 @@ type GasObject = {
 
 export const useDragAndDrop = () => {
   const { selectedCoin, setSelectedCoin } = useSelectedCoin();
-  const { objects, setObjects } = useGetCoinsByType(selectedCoin);
+  const {
+    objects,
+    setObjects,
+    loadingCoins,
+    fetchingCoins,
+    refetchCoins,
+    isSuccess,
+  } = useGetCoinsByType(selectedCoin);
   const [isDragged, setIsDragged] = useState<string>("");
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
   const [gasObject, setGasObject] = useState<GasObject>({
     coin_id: "",
     balance: 0,
   });
-
-  useEffect(() => {
-    setObjects(
-      objects.filter((object) => object.coin_id !== gasObject.coin_id)
-    );
-  }, [gasObject]);
 
   const handleOnDrag = (
     e: React.DragEvent<HTMLDivElement>,
@@ -34,39 +36,51 @@ export const useDragAndDrop = () => {
     e.dataTransfer.setData("balance", `${balance}`);
     setIsDragged(objectId);
   };
+
   const handleOnDragEnd = () => {
     setIsDragged("");
     setIsDragOver(false);
   };
+
   const handleOnDragLeave = () => {
     setIsDragOver(false);
   };
+
   const handleOnDropGas = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const objectId = e.dataTransfer.getData("objectId");
     const balance = e.dataTransfer.getData("balance");
     setGasObject({ coin_id: objectId, balance: Number(balance) });
     toast.success(`Set ${objectId.slice(0, 4)}...${objectId.slice(-4)} as Gas`);
+
     setIsDragOver(false);
-    console.log(objects);
   };
 
-  const handleOnDropToMerge = (
+  const handleOnDropToMerge = async (
     e: React.DragEvent<HTMLDivElement>,
     mergeTo: string
   ) => {
     e.preventDefault();
     const coinToMerge = e.dataTransfer.getData("objectId");
-    console.log("ObjectId", coinToMerge);
+    console.log(mergeTo, coinToMerge);
     if (coinToMerge === mergeTo) return;
-    mergeCoins(selectedCoin, [mergeTo, coinToMerge], gasObject.coin_id);
-    toast.success(
-      `Merged ${coinToMerge.slice(0, 4)}...${coinToMerge.slice(
-        -4
-      )} to ${mergeTo.slice(0, 4)}...${mergeTo.slice(-4)}`
+    toast.promise(
+      mergeCoins(
+        selectedCoin,
+        [mergeTo, coinToMerge],
+        gasObject.coin_id || null
+      ),
+      {
+        loading: "Merging...",
+        success: `Merged ${coinToMerge.slice(0, 4)}...${coinToMerge.slice(
+          -4
+        )} to ${mergeTo.slice(0, 4)}...${mergeTo.slice(-4)}`,
+        error: "Error when fetching",
+      }
     );
     // setObjects(objects.filter((object) => object.coinObjectId !== objectId));
   };
+
   const handleOnDropToSend = (
     e: React.DragEvent<HTMLDivElement>,
     contact: string
@@ -96,5 +110,9 @@ export const useDragAndDrop = () => {
     handleOnDragEnd,
     isDragOver,
     handleOnDragLeave,
+    loadingCoins,
+    fetchingCoins,
+    refetchCoins,
+    objects,
   };
 };
