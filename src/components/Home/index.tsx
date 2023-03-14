@@ -3,8 +3,6 @@ import type { NextPage } from "next";
 import { invoke } from "@tauri-apps/api";
 import { toast } from "react-hot-toast";
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
   const [name, setName] = useState<string>("");

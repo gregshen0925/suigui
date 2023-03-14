@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React, { type Dispatch, type SetStateAction } from "react";
 import { motion } from "framer-motion";
 import { useCreateKey } from "../../hooks/sui/useCreateKey";

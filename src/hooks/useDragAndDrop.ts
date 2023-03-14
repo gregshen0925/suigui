@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-hot-toast";
-import { type SuiCoinResult } from "../bindings";
 import { mergeCoins } from "../utils/mergeCoins";
 import { useGetCoinsByType } from "./sui/useGetCoinsByType";
 import { useSelectedCoin } from "./sui/useSelectedCoin";
@@ -12,14 +11,8 @@ type GasObject = {
 
 export const useDragAndDrop = () => {
   const { selectedCoin, setSelectedCoin } = useSelectedCoin();
-  const {
-    objects,
-    setObjects,
-    loadingCoins,
-    fetchingCoins,
-    refetchCoins,
-    isSuccess,
-  } = useGetCoinsByType(selectedCoin);
+  const { objects, loadingCoins, fetchingCoins, refetchCoins } =
+    useGetCoinsByType(selectedCoin);
   const [isDragged, setIsDragged] = useState<string>("");
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
   const [gasObject, setGasObject] = useState<GasObject>({
