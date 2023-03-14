@@ -2,8 +2,6 @@ import React from "react";
 import { useGetCoinTypes } from "../../../hooks/sui/useGetCoinTypes";
 import { useSelectedCoin } from "../../../hooks/sui/useSelectedCoin";
 
-type Props = {};
-
 const SelectButton = () => {
   const { coinTypes, isLoading, isFetching } = useGetCoinTypes();
   const { selectedCoin, setSelectedCoin } = useSelectedCoin();

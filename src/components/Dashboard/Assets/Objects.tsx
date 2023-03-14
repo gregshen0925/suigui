@@ -7,7 +7,6 @@ const Objects = () => {
     handleDragOver,
     handleOnDropToMerge,
     isDragged,
-    setIsDragged,
     handleOnDragEnd,
     loadingCoins,
     fetchingCoins,
@@ -62,11 +61,13 @@ const Objects = () => {
                   handleOnDrag(e, object.coin_id, object.balance)
                 }
                 className={`${
-                  isDragged == object.coin_id ? "bg-black" : "bg-white/30"
-                } m-2 w-[130px] h-[130px] rounded-full  text-white flex flex-col justify-center items-center`}
+                  isDragged == object.coin_id
+                    ? "opacity-0 scale-90"
+                    : "bg-white/30"
+                } m-2 w-[130px] h-[130px] duration-200 transition rounded-full hover:scale-90 text-white flex flex-col justify-center items-center`}
               >
-                <div className="absolute w-[130px] h-[130px] z-[1] m-2 rounded-full" />
-                <div className=" text-center font-bold text-white">
+                <div className="absolute hover:scale-90 transition duration-200 delay-150 w-[130px] h-[130px] z-[1] m-2 rounded-full" />
+                <div className="text-center font-bold">
                   <div className="">
                     {" "}
                     {object.coin_id.slice(0, 4) +

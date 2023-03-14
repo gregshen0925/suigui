@@ -1,6 +1,7 @@
 import { useDragAndDrop } from "../../../hooks/useDragAndDrop";
 import Objects from "./Objects";
 import SelectButton from "./SelectButton";
+import { motion } from "framer-motion";
 
 const Assets = () => {
   const {
