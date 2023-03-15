@@ -1,7 +1,6 @@
 import { useDragAndDrop } from "../../../hooks/useDragAndDrop";
 import Objects from "./Objects";
 import SelectButton from "./SelectButton";
-import { motion } from "framer-motion";
 
 const Assets = () => {
   const {
@@ -30,7 +29,9 @@ const Assets = () => {
               className={`w-[130px] h-[130px] border ${
                 isDragOver ? "border-[2px] border-green-600" : ""
               }`}
-              onDrop={handleOnDropGas}
+              onDrop={(e) =>
+                handleOnDropGas(e, gasObject.coin_id, gasObject.balance)
+              }
               onDragOver={handleDragOver}
               onDragLeave={handleOnDragLeave}
               onDragEnd={handleOnDragEnd}

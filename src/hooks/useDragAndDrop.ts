@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+import { useStore } from "../store/store";
 import { mergeCoins } from "../utils/mergeCoins";
 import { useGetCoinsByType } from "./sui/useGetCoinsByType";
 import { useSelectedCoin } from "./sui/useSelectedCoin";
@@ -19,6 +20,7 @@ export const useDragAndDrop = () => {
     coin_id: "",
     balance: 0,
   });
+  const [filterCoin] = useStore((state) => [state.filterCoin]);
 
   const handleOnDrag = (
     e: React.DragEvent<HTMLDivElement>,
@@ -39,13 +41,17 @@ export const useDragAndDrop = () => {
     setIsDragOver(false);
   };
 
-  const handleOnDropGas = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleOnDropGas = (
+    e: React.DragEvent<HTMLDivElement>,
+    initialGasId: string,
+    initialGasBalance: number
+  ) => {
     e.preventDefault();
     const objectId = e.dataTransfer.getData("objectId");
     const balance = e.dataTransfer.getData("balance");
     setGasObject({ coin_id: objectId, balance: Number(balance) });
     toast.success(`Set ${objectId.slice(0, 4)}...${objectId.slice(-4)} as Gas`);
-
+    filterCoin(objectId);
     setIsDragOver(false);
   };
 
