@@ -11,10 +11,16 @@ export const useSimpleDnD = () => {
   const [isDragOverToSetGas, setIsDragOverToSetGas] = useState<boolean>(false);
 
   // zustand store gas coin
-  const [setGasCoin] = useGasCoinStore((state) => [state.setGasCoin]);
+  const [gasCoin, setGasCoin] = useGasCoinStore((state) => [
+    state.gasCoin,
+    state.setGasCoin,
+  ]);
 
   // zustand store filter coin
-  const [filterCoin] = useObjectStore((state) => [state.filterCoin]);
+  const [filterCoin, returnGasCoin] = useObjectStore((state) => [
+    state.filterCoin,
+    state.returnGasCoin,
+  ]);
 
   // handle coin drag
   const handleOnDrag = (
@@ -40,6 +46,13 @@ export const useSimpleDnD = () => {
     e.preventDefault();
     const objectId = e.dataTransfer.getData("objectId");
     const balance = e.dataTransfer.getData("balance");
+    if (gasCoin) {
+      returnGasCoin({
+        coin_type: gasCoin.coin_type,
+        coin_id: gasCoin.coin_id,
+        balance: gasCoin.balance,
+      });
+    }
     setGasCoin({
       coin_type: "0x2::sui::SUI",
       coin_id: objectId,

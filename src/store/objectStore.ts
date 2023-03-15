@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { type GasCoin } from "../../types";
 import { type SuiCoinResult } from "../bindings";
 
 interface ObjectStore {
@@ -8,6 +9,7 @@ interface ObjectStore {
 interface ObjectAction {
   setObjects: (objects: SuiCoinResult[]) => void;
   filterCoin: (objectID: string) => void;
+  returnGasCoin: (gasCoin: GasCoin) => void;
 }
 
 export const useObjectStore = create<ObjectStore & ObjectAction>()((set) => ({
@@ -18,6 +20,11 @@ export const useObjectStore = create<ObjectStore & ObjectAction>()((set) => ({
   filterCoin: (objectId) => {
     set((state) => ({
       objects: state.objects.filter((object) => object.coin_id !== objectId),
+    }));
+  },
+  returnGasCoin: (gasCoin) => {
+    set((state) => ({
+      objects: [...state.objects, gasCoin],
     }));
   },
 }));

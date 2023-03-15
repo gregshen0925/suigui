@@ -22,7 +22,7 @@ const Tabs = () => {
                     onClick={() => setSelectedTab(tab)}
                     className={`w-full py-3 ${
                       selectedTab == tab
-                        ? "bg-black text-white lg:text-md text-sm"
+                        ? "bg-black text-white lg:text-md text-sm border-t-slate-600 border-b-transparent border-x-slate-600 border-[1px] "
                         : "bg-gray-800 text-gray-400 text-xs lg:text-sm hover:bg-gray-700 hover:text-gray-300"
                     }  rounded-t-xl font-bold transition duration-200`}
                   >
