@@ -1,4 +1,5 @@
 import { useSimpleDnD } from "../../../hooks/DragAndDrop/useSimpleDnD";
+import { useGasCoinStore } from "../../../store/gasCoinStore";
 import Objects from "./Objects";
 import SelectButton from "./SelectButton";
 
@@ -6,10 +7,12 @@ const Assets = () => {
   const {
     handleOnDropGas,
     handleDragOverToSetGas,
-    gasObject,
     isDragOverToSetGas,
     handleOnDragLeaveGasBox,
   } = useSimpleDnD();
+
+  // zustand store gas coin
+  const [gasCoin] = useGasCoinStore((state) => [state.gasCoin]);
 
   return (
     <div className="w-full rounded-xl bg-gradient-to-b from-black to-white p-[1px]">
@@ -37,16 +40,16 @@ const Assets = () => {
                   <div className="absolute w-[110px] h-[110px] z-[1] m-2 rounded-full" />
                   <div className="text-xs text-center font-bold text-white">
                     <div className="">
-                      {gasObject?.coin_id == ""
+                      {!gasCoin?.coin_id
                         ? "Not Set"
-                        : gasObject?.coin_id.slice(0, 4) +
+                        : gasCoin?.coin_id.slice(0, 4) +
                           "..." +
-                          gasObject?.coin_id.slice(-4)}
+                          gasCoin?.coin_id.slice(-4)}
                     </div>
                     <div className="">
-                      {gasObject?.coin_id == "Not Set"
+                      {!gasCoin?.coin_id
                         ? null
-                        : Number(gasObject?.balance) / 10 ** 9}
+                        : Number(gasCoin?.balance) / 10 ** 9}
                     </div>
                   </div>
                 </div>
