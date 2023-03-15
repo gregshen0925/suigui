@@ -93,6 +93,8 @@ pub async fn get_onchain_coins(app: AppHandle<Wry>) -> Result<Vec<String>> {
     let coin_type_table =
         typed_sled::Tree::<String, String>::open(&db, COIN_TYPE_TABLES);
 
+    db.clear().or(Err(anyhow!("Fail to clear database")))?;
+
     Ok(coin_page
         .data
         .into_iter()
@@ -109,12 +111,13 @@ pub async fn get_onchain_coins(app: AppHandle<Wry>) -> Result<Vec<String>> {
         })
         .collect::<Result<Vec<Option<String>>>>()?
         .into_iter()
-        .map(|op_coin| op_coin.unwrap_or(String::from("0x2::sui::SUI")))
+        .map(|opt_coin| opt_coin.unwrap_or(String::from("0x2::sui::SUI")))
         .unique()
         .collect())
 }
 
 pub async fn split_and_transfer(
+    app: AppHandle<Wry>,
     coin_type: &str,
     coin_id: &str,
     amount: u64,
@@ -126,7 +129,7 @@ pub async fn split_and_transfer(
     let package_id = ObjectID::from_hex_literal("0x2").unwrap();
     let coin_id = ObjectID::from_hex_literal(coin_id)
         .or(Err(anyhow!("Invalid object ID")))?;
-    let coin_type =
+    let coin_type_tag =
         TypeTag::from_str(coin_type).or(Err(anyhow!("Invalid coin type")))?;
 
     let gas_coin_id = parse_gas_coin(gas_coin_id)?;
@@ -135,7 +138,7 @@ pub async fn split_and_transfer(
         package_id,
         "pay",
         "split_and_transfer",
-        vec![coin_type],
+        vec![coin_type_tag],
         gas_coin_id,
         500u64,
         vec![
@@ -148,6 +151,15 @@ pub async fn split_and_transfer(
     .await
     .or(Err(anyhow!("Fail to split and transfer")))?;
 
+    if effects.status.is_ok() {
+        let db = (*app.state::<Arc<Db>>()).clone();
+        let coin_db = typed_sled::Tree::<ObjectID, Coin>::open(&db, coin_type);
+        if let Some(mut coin) = coin_db.get(&coin_id)? {
+            coin.balance -= amount;
+            coin_db.insert(&coin_id, &coin)?;
+        }
+    }
+
     Ok(SuiTransactionResponse {
         certificate,
         effects,
@@ -158,6 +170,7 @@ pub async fn split_and_transfer(
 }
 
 pub async fn merge_coins(
+    app: AppHandle<Wry>,
     coin_type: &str,
     coins: Vec<String>,
     gas_coin_id: Option<String>,
@@ -167,6 +180,9 @@ pub async fn merge_coins(
     if coins.len() < 2 {
         return Err(anyhow!("At least two objects to merge"));
     }
+
+    let coin_id_to_merge = ObjectID::from_hex_literal(coins.last().unwrap())
+        .or(Err(anyhow!("Invalid object ID")))?;
 
     let package_id = ObjectID::from_hex_literal("0x2").unwrap();
     let mut coins: Vec<SuiJsonValue> = coins
@@ -180,7 +196,7 @@ pub async fn merge_coins(
         .map(SuiJsonValue::from_object_id)
         .collect();
 
-    let coin_type =
+    let coin_type_tag =
         TypeTag::from_str(coin_type).or(Err(anyhow!("Invalid coin type")))?;
 
     let dist_coin_id = coins.pop().unwrap();
@@ -198,14 +214,36 @@ pub async fn merge_coins(
         package_id,
         "pay",
         "join_vec",
-        vec![coin_type],
+        vec![coin_type_tag],
         gas_coin_id,
         10000u64,
         vec![dist_coin_id, rest_coin_ids],
         &mut wallet,
     )
     .await
-    .or(Err(anyhow!("Fail to split and transfer")))?;
+    .or(Err(anyhow!("Fail to merge coins")))?;
+
+    let db = (*app.state::<Arc<Db>>()).clone();
+    let coin_db = typed_sled::Tree::<ObjectID, Coin>::open(&db, coin_type);
+
+    let culumulative_amount_of_deleted_coins: u64 = effects
+        .deleted
+        .clone()
+        .into_iter()
+        .map(|obj| {
+            coin_db
+                .remove(&obj.object_id)
+                .or(Err(anyhow!("Database error (delete coins)")))
+        })
+        .collect::<Result<Vec<Option<Coin>>>>()?
+        .into_iter()
+        .map(|opt_coin| opt_coin.map_or(0, |c| c.balance))
+        .sum();
+
+    if let Some(mut coin) = coin_db.get(&coin_id_to_merge)? {
+        coin.balance += culumulative_amount_of_deleted_coins;
+        coin_db.insert(&coin_id_to_merge, &coin)?;
+    }
 
     Ok(SuiTransactionResponse {
         certificate,
@@ -259,7 +297,7 @@ pub async fn merge_coins_and_transfer(
         &mut wallet,
     )
     .await
-    .or(Err(anyhow!("Fail to split and transfer")))?;
+    .or(Err(anyhow!("Fail to merge coins and transfer")))?;
 
     Ok(SuiTransactionResponse {
         certificate,

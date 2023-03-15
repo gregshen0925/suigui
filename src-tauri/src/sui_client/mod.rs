@@ -27,6 +27,7 @@ pub async fn get_onchain_coins(
 
 #[tauri::command]
 pub async fn split_and_transfer(
+    app: AppHandle<Wry>,
     coin_type: String,
     coin_id: String,
     amount: u64,
@@ -34,6 +35,7 @@ pub async fn split_and_transfer(
     gas_coin_id: Option<String>,
 ) -> IpcResponse<SuiTransactionResponse> {
     coin::split_and_transfer(
+        app,
         &coin_type,
         &coin_id,
         amount,
@@ -46,11 +48,12 @@ pub async fn split_and_transfer(
 
 #[tauri::command]
 pub async fn merge_coins(
+    app: AppHandle<Wry>,
     coin_type: String,
     coin_id_list: Vec<String>,
     gas_coin_id: Option<String>,
 ) -> IpcResponse<SuiTransactionResponse> {
-    coin::merge_coins(&coin_type, coin_id_list, gas_coin_id)
+    coin::merge_coins(app, &coin_type, coin_id_list, gas_coin_id)
         .await
         .into()
 }
