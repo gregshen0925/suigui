@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import { useStore } from "../../store/store";
-import { transferCoin } from "../../utils/transferCoin";
+import { useObjectStore } from "../../store/objectStore";
+import { transferObject } from "../../utils/transferObject";
+import { useSimpleDnD } from "./useSimpleDnD";
 
 export const useSendDnD = () => {
-  // zustand store filter coin
-  const [filterCoin] = useStore((state) => [state.filterCoin]);
-
+  const { gasObject } = useSimpleDnD();
   // if coin is dragged over to other coin to send
   const [isDragOverToSend, setIsDragOverToSend] = useState<string>();
+
+  // zustand store filter coin
+  const [filterCoin] = useObjectStore((state) => [state.filterCoin]);
 
   // send section
   const handleOnDropToSend = async (
@@ -20,7 +22,8 @@ export const useSendDnD = () => {
     const coinToSend = e.dataTransfer.getData("objectId");
     // if (coinToMerge === mergeTo) return;
     filterCoin(coinToSend);
-    toast.promise(transferCoin(), {
+    console.log(gasObject.coin_id);
+    toast.promise(transferObject(coinToSend, contact, gasObject.coin_id), {
       loading: "Sending...",
       success: `Sent ${coinToSend.slice(0, 4)}...${coinToSend.slice(
         -4
@@ -29,7 +32,22 @@ export const useSendDnD = () => {
     });
   };
 
+  const handleDragOverToSend = (
+    e: React.DragEvent<HTMLDivElement>,
+    contact: string
+  ) => {
+    e.preventDefault();
+    setIsDragOverToSend(contact);
+  };
+
+  const handleOnDragLeaveContact = () => {
+    setIsDragOverToSend("");
+  };
+
   return {
     handleOnDropToSend,
+    handleDragOverToSend,
+    isDragOverToSend,
+    handleOnDragLeaveContact,
   };
 };

@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { useStore } from "../../store/store";
+import { useObjectStore } from "../../store/objectStore";
 import { getCoinsByType } from "../../utils/getCoinsByType";
 
 export function useGetCoinsByType(selectedCoin: string) {
-  const [objects, setObjects] = useStore((state) => [
+  const [objects, setObjects] = useObjectStore((state) => [
     state.objects,
     state.setObjects,
   ]);

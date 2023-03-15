@@ -1,5 +1,6 @@
 import React from "react";
 import { type Contact } from "../../../../types";
+import { useSendDnD } from "../../../hooks/DragAndDrop/useSendDnD";
 
 const Contacts: Contact[] = [
   {
@@ -8,21 +9,33 @@ const Contacts: Contact[] = [
   },
   {
     name: "Justa",
-    address: "0xdcc363fd0aaa25765b156a9bac1e0e55d5ba47c4",
+    address: "0xf76079f179d6a75914f682065f34c344a91b4a55",
   },
 ];
 
 const Contact = () => {
+  const {
+    handleOnDropToSend,
+    handleDragOverToSend,
+    isDragOverToSend,
+    handleOnDragLeaveContact,
+  } = useSendDnD();
+
   return (
     <div>
       <div className="space-y-2">
         {Contacts.map((contact, index) => (
           <div
             key={index}
-            // onDragOver={enableDropping}
-            // onDrop={(e) => handleOnDropToSend(e, contact.address)}
+            onDrop={(e) => handleOnDropToSend(e, contact.address)}
+            onDragOver={(e) => handleDragOverToSend(e, contact.address)}
+            onDragLeave={handleOnDragLeaveContact}
           >
-            <button className="w-full h-[80px] rounded-xl bg-white/20 hover:bg-white/50">
+            <button
+              className={`${
+                isDragOverToSend == contact.address ? "scale-105" : ""
+              } duration-200 transition w-full h-[80px] rounded-xl bg-white/20 hover:bg-white/50`}
+            >
               <div className="flex flex-col items-center">
                 <div className="font-bold"> {contact.name}</div>
                 <div>{contact.address} </div>

@@ -10,7 +10,7 @@ interface ObjectAction {
   filterCoin: (objectID: string) => void;
 }
 
-export const useStore = create<ObjectStore & ObjectAction>()((set) => ({
+export const useObjectStore = create<ObjectStore & ObjectAction>()((set) => ({
   objects: [],
   setObjects: (objects) => {
     set(() => ({ objects: objects }));

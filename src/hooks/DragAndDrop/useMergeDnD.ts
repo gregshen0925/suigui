@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import { useStore } from "../../store/store";
+import { useObjectStore } from "../../store/objectStore";
 import { mergeCoins } from "../../utils/mergeCoins";
 import { useSelectedCoinType } from "../Sui/useSelectedCoinType";
 import { useSimpleDnD } from "./useSimpleDnD";
@@ -13,7 +13,7 @@ export const useMergeDnD = () => {
   const [isDragOverToMerge, setIsDragOverToMerge] = useState<string>();
 
   // zustand store filter coin
-  const [filterCoin] = useStore((state) => [state.filterCoin]);
+  const [filterCoin] = useObjectStore((state) => [state.filterCoin]);
 
   // merge section
   const handleOnDropToMerge = async (

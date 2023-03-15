@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import { useStore } from "../../store/store";
+import { useObjectStore } from "../../store/objectStore";
 import { useGetCoinsByType } from "../Sui/useGetCoinsByType";
 import { useSelectedCoinType } from "../Sui/useSelectedCoinType";
 
@@ -27,7 +27,7 @@ export const useSimpleDnD = () => {
   });
 
   // zustand store filter coin
-  const [filterCoin] = useStore((state) => [state.filterCoin]);
+  const [filterCoin] = useObjectStore((state) => [state.filterCoin]);
 
   // handle coin drag
   const handleOnDrag = (
