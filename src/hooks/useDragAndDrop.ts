@@ -41,11 +41,7 @@ export const useDragAndDrop = () => {
     setIsDragOver(false);
   };
 
-  const handleOnDropGas = (
-    e: React.DragEvent<HTMLDivElement>,
-    initialGasId: string,
-    initialGasBalance: number
-  ) => {
+  const handleOnDropGas = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const objectId = e.dataTransfer.getData("objectId");
     const balance = e.dataTransfer.getData("balance");

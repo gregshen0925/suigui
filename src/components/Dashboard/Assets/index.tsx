@@ -29,9 +29,7 @@ const Assets = () => {
               className={`w-[130px] h-[130px] border ${
                 isDragOver ? "border-[2px] border-green-600" : ""
               }`}
-              onDrop={(e) =>
-                handleOnDropGas(e, gasObject.coin_id, gasObject.balance)
-              }
+              onDrop={(e) => handleOnDropGas(e)}
               onDragOver={handleDragOver}
               onDragLeave={handleOnDragLeave}
               onDragEnd={handleOnDragEnd}
