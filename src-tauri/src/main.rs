@@ -9,17 +9,34 @@ fn greet(name: &str) -> String {
 }
 
 mod ipc;
-// mod store;
 mod sui_client;
 use crate::sui_client::{
-    create_new_config, get_active_address, get_coins_by_coin_type, get_remote_coins,
-    get_remote_objects, merge_coins, merge_coins_and_transfer, split_and_transfer,
+    create_new_config, get_active_address, get_coins_by_coin_type,
+    get_remote_coins, get_remote_objects, merge_coins,
+    merge_coins_and_transfer, split_and_transfer,
 };
 use anyhow::Result;
+use std::sync::Arc;
+use sui_client::config::SUI_GUI_APP_IDENTIFIER;
+use tauri::api::path::local_data_dir;
+
+const DATABASE_FILENAME: &str = "suigui.db";
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    let db = if let Some(data_dir) = local_data_dir() {
+        sled::open(
+            data_dir
+                .join(SUI_GUI_APP_IDENTIFIER)
+                .join(DATABASE_FILENAME),
+        )?
+    } else {
+        sled::Config::new().temporary(true).open()?
+    };
+    let db = Arc::new(db);
+
     tauri::Builder::default()
+        .manage(db)
         .invoke_handler(tauri::generate_handler![
             greet,
             // config

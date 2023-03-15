@@ -25,7 +25,9 @@ pub const SUI_KEYSTORE_FILENAME: &str = "suigui.keystore";
 pub fn suigui_config_dir() -> Result<PathBuf> {
     if let Some(c_dir) = config_dir() {
         let suigui_config_dir = c_dir.join(SUI_GUI_APP_IDENTIFIER);
-        if !suigui_config_dir.exists() && fs::create_dir_all(&suigui_config_dir).is_err() {
+        if !suigui_config_dir.exists()
+            && fs::create_dir_all(&suigui_config_dir).is_err()
+        {
             return Err(anyhow!("Fail to create config directory"));
         }
         Ok(suigui_config_dir)
@@ -56,8 +58,8 @@ pub fn create_new_config() -> Result<CreateConfigResult> {
     let config_path = suigui_config_path()?;
     let keystore_path = suigui_keystore_path()?;
 
-    let keystore_path =
-        FileBasedKeystore::new(&keystore_path).or(Err(anyhow!("Fail to create keystore file")))?;
+    let keystore_path = FileBasedKeystore::new(&keystore_path)
+        .or(Err(anyhow!("Fail to create keystore file")))?;
 
     let mut keystore = Keystore::from(keystore_path);
     let (new_address, phrase, scheme) = keystore
@@ -87,7 +89,8 @@ pub fn create_new_config() -> Result<CreateConfigResult> {
 
 pub fn get_active_address() -> Result<String> {
     let config_path = suigui_config_path()?;
-    let suigui_config = SuiClientConfig::load(config_path).or(Err(anyhow!("Config not exists")))?;
+    let suigui_config = SuiClientConfig::load(config_path)
+        .or(Err(anyhow!("Config not exists")))?;
     match suigui_config.active_address {
         Some(address) => Ok(address.to_string()),
         None => Err(anyhow!("No active address")),

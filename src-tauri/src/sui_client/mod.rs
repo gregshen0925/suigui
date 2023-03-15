@@ -1,11 +1,12 @@
-mod coin;
-mod config;
-mod object;
+pub mod coin;
+pub mod config;
+pub mod object;
 use crate::ipc::IpcResponse;
 use coin::SuiCoinResult;
 use config::CreateConfigResult;
 use object::SuiObjectResult;
 use sui_json_rpc_types::SuiTransactionResponse;
+use tauri::{AppHandle, Wry};
 
 #[tauri::command]
 pub async fn create_new_config() -> IpcResponse<CreateConfigResult> {
@@ -18,8 +19,10 @@ pub async fn get_active_address() -> IpcResponse<String> {
 }
 
 #[tauri::command]
-pub async fn get_remote_coins() -> IpcResponse<Vec<SuiCoinResult>> {
-    coin::get_remote_coins().await.into()
+pub async fn get_remote_coins(
+    app: AppHandle<Wry>,
+) -> IpcResponse<Vec<SuiCoinResult>> {
+    coin::get_remote_coins(app).await.into()
 }
 
 #[tauri::command]
@@ -30,9 +33,15 @@ pub async fn split_and_transfer(
     receipent: String,
     gas_coin_id: Option<String>,
 ) -> IpcResponse<SuiTransactionResponse> {
-    coin::split_and_transfer(&coin_type, &coin_id, amount, &receipent, gas_coin_id)
-        .await
-        .into()
+    coin::split_and_transfer(
+        &coin_type,
+        &coin_id,
+        amount,
+        &receipent,
+        gas_coin_id,
+    )
+    .await
+    .into()
 }
 
 #[tauri::command]
@@ -53,13 +62,20 @@ pub async fn merge_coins_and_transfer(
     receipent: String,
     gas_coin_id: Option<String>,
 ) -> IpcResponse<SuiTransactionResponse> {
-    coin::merge_coins_and_transfer(&coin_type, coin_id_list, &receipent, gas_coin_id)
-        .await
-        .into()
+    coin::merge_coins_and_transfer(
+        &coin_type,
+        coin_id_list,
+        &receipent,
+        gas_coin_id,
+    )
+    .await
+    .into()
 }
 
 #[tauri::command]
-pub async fn get_coins_by_coin_type(coin_type: String) -> IpcResponse<Vec<SuiCoinResult>> {
+pub async fn get_coins_by_coin_type(
+    coin_type: String,
+) -> IpcResponse<Vec<SuiCoinResult>> {
     coin::get_coins_by_coin_type(coin_type).await.into()
 }
 

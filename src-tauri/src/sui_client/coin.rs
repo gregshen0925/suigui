@@ -6,8 +6,9 @@ use serde_json::Value;
 use std::str::FromStr;
 use sui::client_commands::call_move;
 use sui_json::SuiJsonValue;
-use sui_json_rpc_types::SuiTransactionResponse;
+use sui_json_rpc_types::{Coin, SuiTransactionResponse};
 use sui_types::base_types::ObjectID;
+use tauri::{AppHandle, Manager, Wry};
 use ts_rs::TS;
 
 #[derive(Serialize, TS, Debug)]
@@ -22,7 +23,9 @@ pub struct SuiCoinResult {
     // previous_transaction: String,
 }
 
-pub async fn get_coins_by_coin_type(coin_type: String) -> Result<Vec<SuiCoinResult>> {
+pub async fn get_coins_by_coin_type(
+    coin_type: String,
+) -> Result<Vec<SuiCoinResult>> {
     let (wallet, active_address) = config::get_wallet_context().await?;
     Ok(wallet
         .get_client()
@@ -46,8 +49,12 @@ pub async fn get_coins_by_coin_type(coin_type: String) -> Result<Vec<SuiCoinResu
         .collect())
 }
 
-pub async fn get_remote_coins() -> Result<Vec<SuiCoinResult>> {
+pub async fn get_remote_coins(
+    app: AppHandle<Wry>,
+) -> Result<Vec<SuiCoinResult>> {
     let (wallet, active_address) = config::get_wallet_context().await?;
+
+    let db = (*app.state::<sled::Db>()).clone();
 
     let coin_page = wallet
         .get_client()
@@ -58,19 +65,23 @@ pub async fn get_remote_coins() -> Result<Vec<SuiCoinResult>> {
         .await
         .or(Err(anyhow!("Fail to get remote coins")))?;
 
-    Ok(coin_page
+    db.clear().or(Err(anyhow!("Database clear error")))?;
+
+    coin_page
         .data
         .into_iter()
-        .map(|c| SuiCoinResult {
-            coin_type: c.coin_type.to_string(),
-            coin_id: c.coin_object_id.to_string(),
-            // version: c.version.to_string(),
-            // digest: c.digest.to_string(),
-            balance: c.balance,
-            // locked_until_epoch: c.locked_until_epoch,
-            // previous_transaction: c.previous_transaction.to_string(),
+        .map(|c| {
+            let insert_result =
+                typed_sled::Tree::<String, Coin>::open(&db, &c.coin_type)
+                    .insert(&c.coin_type, &c)
+                    .or(Err(anyhow!("Database insert error")));
+            insert_result.map(|_| SuiCoinResult {
+                coin_type: c.coin_type.to_string(),
+                coin_id: c.coin_object_id.to_string(),
+                balance: c.balance,
+            })
         })
-        .collect())
+        .collect()
 }
 
 pub async fn split_and_transfer(
@@ -83,8 +94,10 @@ pub async fn split_and_transfer(
     let (mut wallet, _) = config::get_wallet_context().await?;
 
     let package_id = ObjectID::from_hex_literal("0x2").unwrap();
-    let coin_id = ObjectID::from_hex_literal(coin_id).or(Err(anyhow!("Invalid object ID")))?;
-    let coin_type = TypeTag::from_str(coin_type).or(Err(anyhow!("Invalid coin type")))?;
+    let coin_id = ObjectID::from_hex_literal(coin_id)
+        .or(Err(anyhow!("Invalid object ID")))?;
+    let coin_type =
+        TypeTag::from_str(coin_type).or(Err(anyhow!("Invalid coin type")))?;
 
     let gas_coin_id = parse_gas_coin(gas_coin_id)?;
 
@@ -128,13 +141,17 @@ pub async fn merge_coins(
     let package_id = ObjectID::from_hex_literal("0x2").unwrap();
     let mut coins: Vec<SuiJsonValue> = coins
         .into_iter()
-        .map(|c_str| ObjectID::from_hex_literal(&c_str).or(Err(anyhow!("Invalid object ID"))))
+        .map(|c_str| {
+            ObjectID::from_hex_literal(&c_str)
+                .or(Err(anyhow!("Invalid object ID")))
+        })
         .collect::<Result<Vec<ObjectID>>>()?
         .into_iter()
         .map(SuiJsonValue::from_object_id)
         .collect();
 
-    let coin_type = TypeTag::from_str(coin_type).or(Err(anyhow!("Invalid coin type")))?;
+    let coin_type =
+        TypeTag::from_str(coin_type).or(Err(anyhow!("Invalid coin type")))?;
 
     let dist_coin_id = coins.pop().unwrap();
 
@@ -180,13 +197,17 @@ pub async fn merge_coins_and_transfer(
     let package_id = ObjectID::from_hex_literal("0x2").unwrap();
     let coins: Vec<SuiJsonValue> = coins
         .into_iter()
-        .map(|c_str| ObjectID::from_hex_literal(&c_str).or(Err(anyhow!("Invalid object ID"))))
+        .map(|c_str| {
+            ObjectID::from_hex_literal(&c_str)
+                .or(Err(anyhow!("Invalid object ID")))
+        })
         .collect::<Result<Vec<ObjectID>>>()?
         .into_iter()
         .map(SuiJsonValue::from_object_id)
         .collect();
 
-    let coin_type = TypeTag::from_str(coin_type).or(Err(anyhow!("Invalid coin type")))?;
+    let coin_type =
+        TypeTag::from_str(coin_type).or(Err(anyhow!("Invalid coin type")))?;
 
     let gas_coin_id = parse_gas_coin(gas_coin_id)?;
 
@@ -221,6 +242,8 @@ pub async fn merge_coins_and_transfer(
 
 fn parse_gas_coin(coin_id_str: Option<String>) -> Result<Option<ObjectID>> {
     coin_id_str
-        .map(|s| ObjectID::from_hex_literal(&s).or(Err(anyhow!("Invalid object ID"))))
+        .map(|s| {
+            ObjectID::from_hex_literal(&s).or(Err(anyhow!("Invalid object ID")))
+        })
         .transpose()
 }
