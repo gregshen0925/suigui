@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { getRemoteCoinTypes } from "../../utils/getRemoteCoinTypes";
+import { getOnchainCoinTypes } from "../../utils/getOnchainCoinTypes";
 
 export function useGetCoinTypes() {
   const [coinTypes, setCoinTypes] = useState<string[]>([]);
@@ -10,8 +10,8 @@ export function useGetCoinTypes() {
     isLoading,
     isFetching,
   } = useQuery({
-    queryKey: ["getRemoteCoinTypes"],
-    queryFn: getRemoteCoinTypes,
+    queryKey: ["getOnchainCoinTypes"],
+    queryFn: getOnchainCoinTypes,
     onSuccess: (data) => {
       const { coinTypes } = data;
       setCoinTypes(coinTypes);

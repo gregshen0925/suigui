@@ -19,10 +19,10 @@ pub async fn get_active_address() -> IpcResponse<String> {
 }
 
 #[tauri::command]
-pub async fn get_remote_coins(
+pub async fn get_onchain_coins(
     app: AppHandle<Wry>,
-) -> IpcResponse<Vec<SuiCoinResult>> {
-    coin::get_remote_coins(app).await.into()
+) -> IpcResponse<Vec<String>> {
+    coin::get_onchain_coins(app).await.into()
 }
 
 #[tauri::command]
@@ -73,10 +73,10 @@ pub async fn merge_coins_and_transfer(
 }
 
 #[tauri::command]
-pub async fn get_remote_coins_by_coin_type(
+pub async fn get_onchain_coins_by_coin_type(
     coin_type: String,
 ) -> IpcResponse<Vec<SuiCoinResult>> {
-    coin::get_remote_coins_by_coin_type(coin_type).await.into()
+    coin::get_onchain_coins_by_coin_type(coin_type).await.into()
 }
 
 #[tauri::command]
@@ -88,8 +88,8 @@ pub async fn get_coins_by_coin_type(
 }
 
 #[tauri::command]
-pub async fn get_remote_objects() -> IpcResponse<Vec<SuiObjectResult>> {
-    object::get_remote_objects().await.into()
+pub async fn get_onchain_objects() -> IpcResponse<Vec<SuiObjectResult>> {
+    object::get_onchain_objects().await.into()
 }
 
 #[tauri::command]

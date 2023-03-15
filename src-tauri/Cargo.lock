@@ -226,6 +226,7 @@ name = "app"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "itertools",
  "move-core-types",
  "parking_lot 0.12.1",
  "serde 1.0.152",

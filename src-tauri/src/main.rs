@@ -12,7 +12,7 @@ mod ipc;
 mod sui_client;
 use crate::sui_client::{
     create_new_config, get_active_address, get_coins_by_coin_type,
-    get_remote_coins, get_remote_coins_by_coin_type, get_remote_objects,
+    get_onchain_coins, get_onchain_coins_by_coin_type, get_onchain_objects,
     merge_coins, merge_coins_and_transfer, split_and_transfer, transfer_object,
 };
 use anyhow::Result;
@@ -43,14 +43,14 @@ async fn main() -> Result<()> {
             create_new_config,
             get_active_address,
             // coin
-            get_remote_coins,
+            get_onchain_coins,
             get_coins_by_coin_type,
-            get_remote_coins_by_coin_type,
+            get_onchain_coins_by_coin_type,
             split_and_transfer,
             merge_coins,
             merge_coins_and_transfer,
             // object
-            get_remote_objects,
+            get_onchain_objects,
             transfer_object,
         ])
         .run(tauri::generate_context!())

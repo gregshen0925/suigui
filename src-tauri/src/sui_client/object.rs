@@ -22,7 +22,7 @@ pub struct SuiObjectResult {
     // previous_transaction: String,
 }
 
-pub async fn get_remote_objects() -> Result<Vec<SuiObjectResult>> {
+pub async fn get_onchain_objects() -> Result<Vec<SuiObjectResult>> {
     let (wallet, active_address) = config::get_wallet_context().await?;
 
     let object_list = wallet
@@ -32,7 +32,7 @@ pub async fn get_remote_objects() -> Result<Vec<SuiObjectResult>> {
         .read_api()
         .get_objects_owned_by_address(active_address)
         .await
-        .or(Err(anyhow!("Fail to get remote objects")))?;
+        .or(Err(anyhow!("Fail to get onchain objects")))?;
 
     Ok(object_list
         .into_iter()

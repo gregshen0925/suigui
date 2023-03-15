@@ -1,8 +1,10 @@
 use super::config;
 use anyhow::{anyhow, Result};
+use itertools::Itertools;
 use move_core_types::language_storage::TypeTag;
 use serde::Serialize;
 use serde_json::Value;
+use sled::Db;
 use std::str::FromStr;
 use std::sync::Arc;
 use sui::client_commands::call_move;
@@ -11,6 +13,8 @@ use sui_json_rpc_types::{Coin, SuiTransactionResponse};
 use sui_types::base_types::ObjectID;
 use tauri::{AppHandle, Manager, Wry};
 use ts_rs::TS;
+
+const COIN_TYPE_TABLES: &str = "coin_types";
 
 #[derive(Serialize, TS, Debug)]
 #[ts(export, export_to = "../src/bindings/")]
@@ -23,7 +27,7 @@ pub struct SuiCoinResult {
     // locked_until_epoch: Option<u64>,
     // previous_transaction: String,
 }
-pub async fn get_remote_coins_by_coin_type(
+pub async fn get_onchain_coins_by_coin_type(
     coin_type: String,
 ) -> Result<Vec<SuiCoinResult>> {
     let (wallet, active_address) = config::get_wallet_context().await?;
@@ -53,7 +57,7 @@ pub async fn get_coins_by_coin_type(
     app: AppHandle<Wry>,
     coin_type: String,
 ) -> Result<Vec<SuiCoinResult>> {
-    let db = (*app.state::<Arc<sled::Db>>()).clone();
+    let db = (*app.state::<Arc<Db>>()).clone();
 
     let coin_db = typed_sled::Tree::<ObjectID, Coin>::open(&db, coin_type);
     coin_db
@@ -72,12 +76,10 @@ pub async fn get_coins_by_coin_type(
         .collect()
 }
 
-pub async fn get_remote_coins(
-    app: AppHandle<Wry>,
-) -> Result<Vec<SuiCoinResult>> {
+pub async fn get_onchain_coins(app: AppHandle<Wry>) -> Result<Vec<String>> {
     let (wallet, active_address) = config::get_wallet_context().await?;
 
-    let db = (*app.state::<Arc<sled::Db>>()).clone();
+    let db = (*app.state::<Arc<Db>>()).clone();
 
     let coin_page = wallet
         .get_client()
@@ -86,22 +88,30 @@ pub async fn get_remote_coins(
         .coin_read_api()
         .get_all_coins(active_address, None, None)
         .await
-        .or(Err(anyhow!("Fail to get remote coins")))?;
+        .or(Err(anyhow!("Fail to get onchain coins")))?;
 
-    coin_page
+    let coin_type_table =
+        typed_sled::Tree::<String, String>::open(&db, COIN_TYPE_TABLES);
+
+    Ok(coin_page
         .data
         .into_iter()
         .map(|c| {
-            typed_sled::Tree::<ObjectID, Coin>::open(&db, &c.coin_type)
+            if typed_sled::Tree::<ObjectID, Coin>::open(&db, &c.coin_type)
                 .insert(&c.coin_object_id, &c)
-                .map(|_| SuiCoinResult {
-                    coin_type: c.coin_type.to_string(),
-                    coin_id: c.coin_object_id.to_string(),
-                    balance: c.balance,
-                })
-                .or(Err(anyhow!("Database insert error")))
+                .is_err()
+            {
+                return Err(anyhow!("Database error (coin data)"));
+            };
+            coin_type_table
+                .insert(&c.coin_type, &c.coin_type)
+                .or(Err(anyhow!("Database error (coin types)")))
         })
-        .collect()
+        .collect::<Result<Vec<Option<String>>>>()?
+        .into_iter()
+        .map(|op_coin| op_coin.unwrap_or(String::from("0x2::sui::SUI")))
+        .unique()
+        .collect())
 }
 
 pub async fn split_and_transfer(
@@ -263,7 +273,8 @@ pub async fn merge_coins_and_transfer(
 pub fn parse_gas_coin(coin_id_str: Option<String>) -> Result<Option<ObjectID>> {
     coin_id_str
         .map(|s| {
-            ObjectID::from_hex_literal(&s).or(Err(anyhow!("Invalid object ID")))
+            ObjectID::from_hex_literal(&s)
+                .or(Err(anyhow!("Invalid gas coin ID")))
         })
         .transpose()
 }
