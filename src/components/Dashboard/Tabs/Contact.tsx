@@ -1,6 +1,5 @@
 import React from "react";
 import { type Contact } from "../../../../types";
-import { useDragAndDrop } from "../../../hooks/useDragAndDrop";
 
 const Contacts: Contact[] = [
   {
@@ -14,15 +13,14 @@ const Contacts: Contact[] = [
 ];
 
 const Contact = () => {
-  const { handleOnDropToSend, enableDropping } = useDragAndDrop();
   return (
     <div>
       <div className="space-y-2">
         {Contacts.map((contact, index) => (
           <div
             key={index}
-            onDragOver={enableDropping}
-            onDrop={(e) => handleOnDropToSend(e, contact.address)}
+            // onDragOver={enableDropping}
+            // onDrop={(e) => handleOnDropToSend(e, contact.address)}
           >
             <button className="w-full h-[80px] rounded-xl bg-white/20 hover:bg-white/50">
               <div className="flex flex-col items-center">

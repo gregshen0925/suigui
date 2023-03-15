@@ -1,18 +1,23 @@
-import { useDragAndDrop } from "../../../hooks/useDragAndDrop";
 import { motion } from "framer-motion";
+import { useSimpleDnD } from "../../../hooks/DragAndDrop/useSimpleDnD";
+import { useMergeDnD } from "../../../hooks/DragAndDrop/useMergeDnD";
 
 const Objects = () => {
   const {
     handleOnDrag,
-    handleDragOver,
-    handleOnDropToMerge,
     isDragged,
     handleOnDragEnd,
     loadingCoins,
     fetchingCoins,
     refetchCoins,
     objects,
-  } = useDragAndDrop();
+  } = useSimpleDnD();
+  const {
+    handleOnDragLeaveCoin,
+    handleDragOverToMerge,
+    handleOnDropToMerge,
+    isDragOverToMerge,
+  } = useMergeDnD();
 
   return (
     <div className="">
@@ -54,16 +59,19 @@ const Objects = () => {
               <div
                 key={index}
                 onDrop={(e) => handleOnDropToMerge(e, object.coin_id)}
-                onDragOver={handleDragOver}
-                onDragEnd={handleOnDragEnd}
+                onDragOver={(e) => handleDragOverToMerge(e, object.coin_id)}
                 draggable
                 onDragStart={(e) =>
                   handleOnDrag(e, object.coin_id, object.balance)
                 }
+                onDragEnd={handleOnDragEnd}
+                onDragLeave={handleOnDragLeaveCoin}
                 className={`${
                   isDragged == object.coin_id
                     ? "opacity-0 scale-90"
                     : "bg-white/30"
+                } ${
+                  isDragOverToMerge == object.coin_id ? "scale-110" : ""
                 } m-2 w-[130px] h-[130px] duration-200 transition rounded-full hover:scale-90 text-white flex flex-col justify-center items-center`}
               >
                 <div className="absolute hover:scale-90 transition duration-200 delay-150 w-[130px] h-[130px] z-[1] m-2 rounded-full" />

@@ -1,16 +1,16 @@
 import React from "react";
-import { useGetCoinTypes } from "../../../hooks/sui/useGetCoinTypes";
-import { useSelectedCoin } from "../../../hooks/sui/useSelectedCoin";
+import { useGetCoinTypes } from "../../../hooks/Sui/useGetCoinTypes";
+import { useSelectedCoinType } from "../../../hooks/Sui/useSelectedCoinType";
 
 const SelectButton = () => {
   const { coinTypes, isLoading, isFetching } = useGetCoinTypes();
-  const { selectedCoin, setSelectedCoin } = useSelectedCoin();
+  const { selectedCoinType, setSelectedCoinType } = useSelectedCoinType();
 
   return (
     <div className="flex z-[1] p-5 items-center">
       <div className="dropdown inline-block relative">
         <button className="bg-black text-white font-semibold py-3 justify-center rounded hover:rounded-t flex items-center w-[180px]">
-          <div className="pl-4">{selectedCoin}</div>
+          <div className="pl-4">{selectedCoinType}</div>
           <svg
             className="fill-current h-4 w-4"
             xmlns="http://www.w3.org/2000/svg"
@@ -46,7 +46,7 @@ const SelectButton = () => {
             coinTypes.map((coinType, index) => (
               <li className="" key={index}>
                 <button
-                  onClick={() => setSelectedCoin(coinType)}
+                  onClick={() => setSelectedCoinType(coinType)}
                   className="first:rounded-t last:rounded-b bg-gray-700 hover:bg-gray-600 py-2 w-[180px] block whitespace-no-wrap"
                 >
                   {coinType}

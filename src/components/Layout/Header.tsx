@@ -3,7 +3,7 @@ import React, { type Dispatch, type SetStateAction, useState } from "react";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
-import { useActiveAddress } from "../../hooks/sui/useActiveAddress";
+import { useActiveAddress } from "../../hooks/Sui/useActiveAddress";
 import { toast } from "react-hot-toast";
 import { Links } from "../../../types";
 

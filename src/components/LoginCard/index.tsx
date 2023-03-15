@@ -1,7 +1,7 @@
 import React, { type Dispatch, type SetStateAction } from "react";
 import { motion } from "framer-motion";
-import { useCreateKey } from "../../hooks/sui/useCreateKey";
-import { useActiveAddress } from "../../hooks/sui/useActiveAddress";
+import { useCreateKey } from "../../hooks/Sui/useCreateKey";
+import { useActiveAddress } from "../../hooks/Sui/useActiveAddress";
 
 type Props = {
   setConnectModal: Dispatch<SetStateAction<boolean>>;
