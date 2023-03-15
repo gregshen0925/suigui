@@ -28,10 +28,17 @@ pub struct SuiCoinResult {
     // previous_transaction: String,
 }
 pub async fn get_onchain_coins_by_coin_type(
+    app: AppHandle<Wry>,
     coin_type: String,
 ) -> Result<Vec<SuiCoinResult>> {
     let (wallet, active_address) = config::get_wallet_context().await?;
-    Ok(wallet
+    let db = (*app.state::<Arc<Db>>()).clone();
+    let coin_type_clone = coin_type.clone();
+    let coin_db = typed_sled::Tree::<ObjectID, Coin>::open(&db, &coin_type);
+    coin_db
+        .clear()
+        .or(Err(anyhow!("Fail to clear database {}", &coin_type)))?;
+    wallet
         .get_client()
         .await
         .or(Err(anyhow!("Fail to get client")))?
@@ -41,16 +48,14 @@ pub async fn get_onchain_coins_by_coin_type(
         .or(Err(anyhow!("Fail to get coins")))?
         .data
         .into_iter()
-        .map(|c| SuiCoinResult {
-            coin_type: c.coin_type.to_string(),
-            coin_id: c.coin_object_id.to_string(),
-            // version: c.version.to_string(),
-            // digest: c.digest.to_string(),
-            balance: c.balance,
-            // locked_until_epoch: c.locked_until_epoch,
-            // previous_transaction: c.previous_transaction.to_string(),
+        .map(|c| {
+            coin_db
+                .insert(&c.coin_object_id, &c)
+                .or(Err(anyhow!("Fail to update coin type {}", c.coin_type)))
         })
-        .collect())
+        .collect::<Result<Vec<Option<Coin>>>>()?;
+
+    get_coins_by_coin_type(app, coin_type_clone).await
 }
 
 pub async fn get_coins_by_coin_type(
@@ -70,7 +75,7 @@ pub async fn get_coins_by_coin_type(
                     balance: coin.balance,
                 })
             } else {
-                Err(anyhow!("Can't get coins from cache"))
+                Err(anyhow!("Fail to get coins from cache"))
             }
         })
         .collect()

@@ -77,9 +77,12 @@ pub async fn merge_coins_and_transfer(
 
 #[tauri::command]
 pub async fn get_onchain_coins_by_coin_type(
+    app: AppHandle<Wry>,
     coin_type: String,
 ) -> IpcResponse<Vec<SuiCoinResult>> {
-    coin::get_onchain_coins_by_coin_type(coin_type).await.into()
+    coin::get_onchain_coins_by_coin_type(app, coin_type)
+        .await
+        .into()
 }
 
 #[tauri::command]
