@@ -4,6 +4,7 @@ use move_core_types::language_storage::TypeTag;
 use serde::Serialize;
 use serde_json::Value;
 use std::str::FromStr;
+use std::sync::Arc;
 use sui::client_commands::call_move;
 use sui_json::SuiJsonValue;
 use sui_json_rpc_types::{Coin, SuiTransactionResponse};
@@ -22,8 +23,7 @@ pub struct SuiCoinResult {
     // locked_until_epoch: Option<u64>,
     // previous_transaction: String,
 }
-
-pub async fn get_coins_by_coin_type(
+pub async fn get_remote_coins_by_coin_type(
     coin_type: String,
 ) -> Result<Vec<SuiCoinResult>> {
     let (wallet, active_address) = config::get_wallet_context().await?;
@@ -49,12 +49,35 @@ pub async fn get_coins_by_coin_type(
         .collect())
 }
 
+pub async fn get_coins_by_coin_type(
+    app: AppHandle<Wry>,
+    coin_type: String,
+) -> Result<Vec<SuiCoinResult>> {
+    let db = (*app.state::<Arc<sled::Db>>()).clone();
+
+    let coin_db = typed_sled::Tree::<ObjectID, Coin>::open(&db, coin_type);
+    coin_db
+        .iter()
+        .map(|item| {
+            if let Ok((_, coin)) = item {
+                Ok(SuiCoinResult {
+                    coin_type: coin.coin_type.to_string(),
+                    coin_id: coin.coin_object_id.to_string(),
+                    balance: coin.balance,
+                })
+            } else {
+                Err(anyhow!("Can't get coins from cache"))
+            }
+        })
+        .collect()
+}
+
 pub async fn get_remote_coins(
     app: AppHandle<Wry>,
 ) -> Result<Vec<SuiCoinResult>> {
     let (wallet, active_address) = config::get_wallet_context().await?;
 
-    let db = (*app.state::<sled::Db>()).clone();
+    let db = (*app.state::<Arc<sled::Db>>()).clone();
 
     let coin_page = wallet
         .get_client()
@@ -65,14 +88,12 @@ pub async fn get_remote_coins(
         .await
         .or(Err(anyhow!("Fail to get remote coins")))?;
 
-    db.clear().or(Err(anyhow!("Database clear error")))?;
-
     coin_page
         .data
         .into_iter()
         .map(|c| {
-            typed_sled::Tree::<String, Coin>::open(&db, &c.coin_type)
-                .insert(&c.coin_type, &c)
+            typed_sled::Tree::<ObjectID, Coin>::open(&db, &c.coin_type)
+                .insert(&c.coin_object_id, &c)
                 .map(|_| SuiCoinResult {
                     coin_type: c.coin_type.to_string(),
                     coin_id: c.coin_object_id.to_string(),

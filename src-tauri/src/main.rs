@@ -12,8 +12,8 @@ mod ipc;
 mod sui_client;
 use crate::sui_client::{
     create_new_config, get_active_address, get_coins_by_coin_type,
-    get_remote_coins, get_remote_objects, merge_coins,
-    merge_coins_and_transfer, split_and_transfer, transfer_object,
+    get_remote_coins, get_remote_coins_by_coin_type, get_remote_objects,
+    merge_coins, merge_coins_and_transfer, split_and_transfer, transfer_object,
 };
 use anyhow::Result;
 use std::sync::Arc;
@@ -45,6 +45,7 @@ async fn main() -> Result<()> {
             // coin
             get_remote_coins,
             get_coins_by_coin_type,
+            get_remote_coins_by_coin_type,
             split_and_transfer,
             merge_coins,
             merge_coins_and_transfer,

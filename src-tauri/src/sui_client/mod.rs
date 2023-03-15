@@ -73,10 +73,18 @@ pub async fn merge_coins_and_transfer(
 }
 
 #[tauri::command]
-pub async fn get_coins_by_coin_type(
+pub async fn get_remote_coins_by_coin_type(
     coin_type: String,
 ) -> IpcResponse<Vec<SuiCoinResult>> {
-    coin::get_coins_by_coin_type(coin_type).await.into()
+    coin::get_remote_coins_by_coin_type(coin_type).await.into()
+}
+
+#[tauri::command]
+pub async fn get_coins_by_coin_type(
+    app: AppHandle<Wry>,
+    coin_type: String,
+) -> IpcResponse<Vec<SuiCoinResult>> {
+    coin::get_coins_by_coin_type(app, coin_type).await.into()
 }
 
 #[tauri::command]
