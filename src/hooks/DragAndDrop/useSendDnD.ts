@@ -22,6 +22,7 @@ export const useSendDnD = () => {
     const coinToSend = e.dataTransfer.getData("objectId");
     // if (coinToMerge === mergeTo) return;
     filterCoin(coinToSend);
+    console.log(contact, coinToSend);
     console.log(gasObject.coin_id);
     toast.promise(transferObject(coinToSend, contact, gasObject.coin_id), {
       loading: "Sending...",
