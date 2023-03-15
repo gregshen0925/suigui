@@ -2,12 +2,10 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useGasCoinStore } from "../../store/gasCoinStore";
 import { useObjectStore } from "../../store/objectStore";
+import { useSelectedCoinTypeStore } from "../../store/selectedCoinTypeStore";
 import { mergeCoins } from "../../utils/mergeCoins";
-import { useSelectedCoinType } from "../Sui/useSelectedCoinType";
 
 export const useMergeDnD = () => {
-  const { selectedCoinType } = useSelectedCoinType();
-
   // if coin is dragged over to other coin to merge
   const [isDragOverToMerge, setIsDragOverToMerge] = useState<string>();
 
@@ -16,6 +14,11 @@ export const useMergeDnD = () => {
 
   // zustand store filter coin
   const [filterCoin] = useObjectStore((state) => [state.filterCoin]);
+
+  // zustand store selected coin
+  const [selectedCoinType] = useSelectedCoinTypeStore((state) => [
+    state.selectedCoinType,
+  ]);
 
   // merge section
   const handleOnDropToMerge = async (

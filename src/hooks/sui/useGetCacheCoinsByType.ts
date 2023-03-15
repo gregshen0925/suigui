@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useObjectStore } from "../../store/objectStore";
-import { getCoinsByType } from "../../utils/getCoinsByType";
+import { getCacheCoinsByType } from "../../utils/getCacheCoinsByType";
 
-export function useGetCoinsByType(selectedCoin: string) {
+export function useGetCacheCoinsByType(selectedCoin: string) {
   const [objects, setObjects] = useObjectStore((state) => [
     state.objects,
     state.setObjects,
@@ -14,7 +14,7 @@ export function useGetCoinsByType(selectedCoin: string) {
     isSuccess,
   } = useQuery({
     queryKey: ["getCoinsByType"],
-    queryFn: () => getCoinsByType(selectedCoin),
+    queryFn: () => getCacheCoinsByType(selectedCoin),
     onSuccess: (data) => {
       const { error, result } = data;
       if (error) {

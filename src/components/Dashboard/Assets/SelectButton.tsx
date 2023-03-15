@@ -1,10 +1,12 @@
 import React from "react";
 import { useGetCoinTypes } from "../../../hooks/Sui/useGetCoinTypes";
-import { useSelectedCoinType } from "../../../hooks/Sui/useSelectedCoinType";
+import { useSelectedCoinTypeStore } from "../../../store/selectedCoinTypeStore";
 
 const SelectButton = () => {
   const { coinTypes, isLoading, isFetching } = useGetCoinTypes();
-  const { selectedCoinType, setSelectedCoinType } = useSelectedCoinType();
+  const [selectedCoinType, setSelectedCoinType] = useSelectedCoinTypeStore(
+    (state) => [state.selectedCoinType, state.setSelectedCoinType]
+  );
 
   return (
     <div className="flex z-[1] p-5 items-center">

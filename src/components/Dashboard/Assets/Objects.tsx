@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { useSimpleDnD } from "../../../hooks/DragAndDrop/useSimpleDnD";
 import { useMergeDnD } from "../../../hooks/DragAndDrop/useMergeDnD";
-import { useGetCoinsByType } from "../../../hooks/Sui/useGetCoinsByType";
-import { useSelectedCoinType } from "../../../hooks/Sui/useSelectedCoinType";
+import { useGetOnchainCoinsByType } from "../../../hooks/Sui/useGetOnchainCoinsByType";
+import { useSelectedCoinTypeStore } from "../../../store/selectedCoinTypeStore";
 
 const Objects = () => {
   const { handleOnDrag, isDragged, handleOnDragEnd } = useSimpleDnD();
@@ -12,9 +12,13 @@ const Objects = () => {
     handleOnDropToMerge,
     isDragOverToMerge,
   } = useMergeDnD();
-  const { selectedCoinType } = useSelectedCoinType();
+
+  // zustand store selected coin
+  const [selectedCoinType] = useSelectedCoinTypeStore((state) => [
+    state.selectedCoinType,
+  ]);
   const { objects, loadingCoins, fetchingCoins, refetchCoins } =
-    useGetCoinsByType(selectedCoinType);
+    useGetOnchainCoinsByType(selectedCoinType);
 
   return (
     <div className="">
