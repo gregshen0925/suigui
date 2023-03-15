@@ -71,15 +71,14 @@ pub async fn get_remote_coins(
         .data
         .into_iter()
         .map(|c| {
-            let insert_result =
-                typed_sled::Tree::<String, Coin>::open(&db, &c.coin_type)
-                    .insert(&c.coin_type, &c)
-                    .or(Err(anyhow!("Database insert error")));
-            insert_result.map(|_| SuiCoinResult {
-                coin_type: c.coin_type.to_string(),
-                coin_id: c.coin_object_id.to_string(),
-                balance: c.balance,
-            })
+            typed_sled::Tree::<String, Coin>::open(&db, &c.coin_type)
+                .insert(&c.coin_type, &c)
+                .map(|_| SuiCoinResult {
+                    coin_type: c.coin_type.to_string(),
+                    coin_id: c.coin_object_id.to_string(),
+                    balance: c.balance,
+                })
+                .or(Err(anyhow!("Database insert error")))
         })
         .collect()
 }
@@ -88,7 +87,7 @@ pub async fn split_and_transfer(
     coin_type: &str,
     coin_id: &str,
     amount: u64,
-    receipent: &str,
+    recipient: &str,
     gas_coin_id: Option<String>,
 ) -> Result<SuiTransactionResponse> {
     let (mut wallet, _) = config::get_wallet_context().await?;
@@ -111,7 +110,7 @@ pub async fn split_and_transfer(
         vec![
             SuiJsonValue::from_object_id(coin_id),
             SuiJsonValue::new(amount.into())?,
-            SuiJsonValue::from_str(receipent)?,
+            SuiJsonValue::from_str(recipient)?,
         ],
         &mut wallet,
     )
@@ -189,7 +188,7 @@ pub async fn merge_coins(
 pub async fn merge_coins_and_transfer(
     coin_type: &str,
     coins: Vec<String>,
-    receipent: &str,
+    recipient: &str,
     gas_coin_id: Option<String>,
 ) -> Result<SuiTransactionResponse> {
     let (mut wallet, _) = config::get_wallet_context().await?;
@@ -225,7 +224,7 @@ pub async fn merge_coins_and_transfer(
         vec![coin_type],
         gas_coin_id,
         10000u64,
-        vec![coins, SuiJsonValue::from_str(receipent)?],
+        vec![coins, SuiJsonValue::from_str(recipient)?],
         &mut wallet,
     )
     .await
@@ -240,7 +239,7 @@ pub async fn merge_coins_and_transfer(
     })
 }
 
-fn parse_gas_coin(coin_id_str: Option<String>) -> Result<Option<ObjectID>> {
+pub fn parse_gas_coin(coin_id_str: Option<String>) -> Result<Option<ObjectID>> {
     coin_id_str
         .map(|s| {
             ObjectID::from_hex_literal(&s).or(Err(anyhow!("Invalid object ID")))

@@ -30,14 +30,14 @@ pub async fn split_and_transfer(
     coin_type: String,
     coin_id: String,
     amount: u64,
-    receipent: String,
+    recipient: String,
     gas_coin_id: Option<String>,
 ) -> IpcResponse<SuiTransactionResponse> {
     coin::split_and_transfer(
         &coin_type,
         &coin_id,
         amount,
-        &receipent,
+        &recipient,
         gas_coin_id,
     )
     .await
@@ -59,13 +59,13 @@ pub async fn merge_coins(
 pub async fn merge_coins_and_transfer(
     coin_type: String,
     coin_id_list: Vec<String>,
-    receipent: String,
+    recipient: String,
     gas_coin_id: Option<String>,
 ) -> IpcResponse<SuiTransactionResponse> {
     coin::merge_coins_and_transfer(
         &coin_type,
         coin_id_list,
-        &receipent,
+        &recipient,
         gas_coin_id,
     )
     .await
@@ -82,4 +82,15 @@ pub async fn get_coins_by_coin_type(
 #[tauri::command]
 pub async fn get_remote_objects() -> IpcResponse<Vec<SuiObjectResult>> {
     object::get_remote_objects().await.into()
+}
+
+#[tauri::command]
+pub async fn transfer_object(
+    object_id: String,
+    recipient: String,
+    gas_coin_id: Option<String>,
+) -> IpcResponse<SuiTransactionResponse> {
+    object::tranfer_object(&object_id, &recipient, gas_coin_id)
+        .await
+        .into()
 }
