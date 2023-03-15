@@ -1,22 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { getRemoteObjectTypes } from "../../utils/getRemoteObjectTypes";
+import { getRemoteCoinTypes } from "../../utils/getRemoteCoinTypes";
 
 export function useGetCoinTypes() {
-  const [objectTypes, setObjectTypes] = useState<string[]>([]);
+  const [coinTypes, setCoinTypes] = useState<string[]>([]);
   const {
     data: coins,
     refetch: refetchCoins,
     isLoading,
     isFetching,
   } = useQuery({
-    queryKey: ["getRemoteObjects"],
-    queryFn: getRemoteObjectTypes,
+    queryKey: ["getRemoteCoinTypes"],
+    queryFn: getRemoteCoinTypes,
     onSuccess: (data) => {
-      const { objectTypes } = data;
-      setObjectTypes(objectTypes);
+      const { coinTypes } = data;
+      setCoinTypes(coinTypes);
     },
   });
 
-  return { coins, refetchCoins, objectTypes, isLoading, isFetching };
+  return { coins, refetchCoins, coinTypes, isLoading, isFetching };
 }

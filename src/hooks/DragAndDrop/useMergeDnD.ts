@@ -3,10 +3,10 @@ import { toast } from "react-hot-toast";
 import { useGasCoinStore } from "../../store/gasCoinStore";
 import { useObjectStore } from "../../store/objectStore";
 import { mergeCoins } from "../../utils/mergeCoins";
-import { useSelectedObjectType } from "../Sui/useSelectedObjectType";
+import { useSelectedCoinType } from "../Sui/useSelectedCoinType";
 
 export const useMergeDnD = () => {
-  const { selectedObjectType } = useSelectedObjectType();
+  const { selectedCoinType } = useSelectedCoinType();
 
   // if coin is dragged over to other coin to merge
   const [isDragOverToMerge, setIsDragOverToMerge] = useState<string>();
@@ -29,7 +29,7 @@ export const useMergeDnD = () => {
     const gasCoinToUse = gasCoin ? gasCoin.coin_id : null;
     filterCoin(coinToMerge);
     toast.promise(
-      mergeCoins(selectedObjectType, [mergeTo, coinToMerge], gasCoinToUse),
+      mergeCoins(selectedCoinType, [mergeTo, coinToMerge], gasCoinToUse),
       {
         loading: "Merging...",
         success: `Merged ${coinToMerge.slice(0, 4)}...${coinToMerge.slice(

@@ -1,16 +1,16 @@
 import React from "react";
 import { useGetCoinTypes } from "../../../hooks/Sui/useGetCoinTypes";
-import { useSelectedObjectType } from "../../../hooks/Sui/useSelectedObjectType";
+import { useSelectedCoinType } from "../../../hooks/Sui/useSelectedCoinType";
 
 const SelectButton = () => {
-  const { objectTypes, isLoading, isFetching } = useGetCoinTypes();
-  const { selectedObjectType, setSelectedObjectType } = useSelectedObjectType();
+  const { coinTypes, isLoading, isFetching } = useGetCoinTypes();
+  const { selectedCoinType, setSelectedCoinType } = useSelectedCoinType();
 
   return (
     <div className="flex z-[1] p-5 items-center">
       <div className="dropdown inline-block relative">
         <button className="bg-black text-white font-semibold py-3 justify-center rounded hover:rounded-t flex items-center w-[180px]">
-          <div className="pl-4">{selectedObjectType}</div>
+          <div className="pl-4">{selectedCoinType}</div>
           <svg
             className="fill-current h-4 w-4"
             xmlns="http://www.w3.org/2000/svg"
@@ -42,14 +42,14 @@ const SelectButton = () => {
                 <span className="sr-only">Loading...</span>
               </div>
             </div>
-          ) : objectTypes.length > 0 ? (
-            objectTypes.map((objectType, index) => (
+          ) : coinTypes.length > 0 ? (
+            coinTypes.map((coinType, index) => (
               <li className="" key={index}>
                 <button
-                  onClick={() => setSelectedObjectType(objectType)}
+                  onClick={() => setSelectedCoinType(coinType)}
                   className="first:rounded-t last:rounded-b bg-gray-700 hover:bg-gray-600 py-2 w-[180px] block whitespace-no-wrap"
                 >
-                  {objectType}
+                  {coinType}
                 </button>
               </li>
             ))
