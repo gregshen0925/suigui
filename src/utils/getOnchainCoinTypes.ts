@@ -2,12 +2,16 @@ import { invoke } from "@tauri-apps/api";
 import type { IpcResponse } from "../bindings";
 
 export const getOnchainCoinTypes = async () => {
-  const { error, result } = (await invoke("get_onchain_coins")) as IpcResponse<string[]>;
-  let coinTypes: string[] = [];
+  const { error, result } = (await invoke("get_onchain_coins")) as IpcResponse<
+    string[]
+  >;
+  const coinTypes: string[] = [];
 
   if (error) console.log(error);
 
-  if (result) coinTypes = result;
+  if (result) {
+    coinTypes.push(...result);
+  }
 
   return { coinTypes };
 };
