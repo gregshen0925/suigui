@@ -51,11 +51,10 @@ pub async fn get_onchain_coins_by_coin_type(
         .map(|c| {
             coin_db
                 .insert(&c.coin_object_id, &c)
-                .or(Err(anyhow!("Fail to update coin type {}", c.coin_type)))
+                .or(Err(anyhow!("Fail to update coin id {}", c.coin_object_id)))
         })
-        .collect::<Result<Vec<Option<Coin>>>>()?;
-
-    get_coins_by_coin_type(app, coin_type_clone).await
+        .collect::<Result<Vec<Option<Coin>>>>()
+        .and(get_coins_by_coin_type(app, coin_type_clone).await)
 }
 
 pub async fn get_coins_by_coin_type(
